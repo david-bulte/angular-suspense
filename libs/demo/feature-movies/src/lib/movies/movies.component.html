@@ -1,0 +1,40 @@
+<div>
+  <button
+    type="button"
+    (click)="onSelectGenre(genre)"
+    *ngFor="let genre of genres$ | async"
+  >
+    {{ genre }}
+  </button>
+
+  <app-suspense [loadingState]="loadingState$ | async">
+<!--    <ng-template appLoading>-->
+<!--      <div class="loading">loading...</div>-->
+<!--    </ng-template>-->
+    <div appSuccess>
+      <div *ngFor="let movie of movies$ | async">
+        <div>
+          <a [routerLink]="movie.name">{{ movie.name }}</a>
+        </div>
+      </div>
+
+      <div>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <ng-template appEmpty>empty</ng-template>
+    <ng-template appError>error (let-error)</ng-template>
+  </app-suspense>
+</div>
+
+<!--<app-suspense>-->
+<!--  <div *ngFor="let movie of movies$ | async">-->
+<!--    <div>-->
+<!--      <a [routerLink]="movie.name">{{ movie.name }}</a>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  <div>-->
+<!--    <router-outlet></router-outlet>-->
+<!--  </div>-->
+<!--</app-suspense>-->

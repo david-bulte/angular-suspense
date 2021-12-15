@@ -1,12 +1,24 @@
+import { DemoFeatureMoviesModule } from '@angular-suspense/demo-feature-movies';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { SharedSuspenseModule } from '@david-bulte/angular-suspense';
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
+import { routes } from './app.routes';
+import { LoadingStatesComponent } from './loading-states.component';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule],
-  providers: [],
+  declarations: [AppComponent, LoadingStatesComponent],
+  imports: [
+    DemoFeatureMoviesModule,
+    RouterModule.forRoot(routes),
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
+    SharedSuspenseModule,
+    BrowserAnimationsModule,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

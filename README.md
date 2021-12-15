@@ -1,105 +1,152 @@
-
-
 # AngularSuspense
 
-This project was generated using [Nx](https://nx.dev).
+Work in progress folks. Stay tuned.
 
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="450"></p>
+##Intro
 
-🔎 **Smart, Extensible Build Framework**
+Showing content as soon as it arrives can be nice thing to pursue. However, 
+when this results in a page full of spinners, skeleton loaders and what not, the 
+user experience becomes less joyful. Somewhere there exists a balance between 
+fast load times and jankless web pages, and with AngularSuspense, developers don't 
+have to compromise between the two.
 
-## Quick Start & Documentation
+The project was inspired by [react suspense](https://reactjs.org/docs/concurrent-mode-suspense.html),
+[react's error boundary](https://reactjs.org/docs/error-boundaries.html) and
+[remix](https://remix.run/).
 
-[Nx Documentation](https://nx.dev/angular)
+## How it works
 
-[10-minute video showing all Nx features](https://nx.dev/getting-started/intro)
+Components have their own loader component, i.e. SuspenseComponent.
+SuspenseComponent is aware of its component's LoadingState *and* of the 
+LoadingStates of all of the component's children.
 
-[Interactive Tutorial](https://nx.dev/tutorial/01-create-application)
+A LoadingState is either one of the following:
+- LOADING
+- EMPTY
+- ERROR
+- SUCCESS
 
-## Adding capabilities to your workspace
+These are the rules AngularSuspense takes into account when displaying loaders, 
+empty or error state:
 
-Nx supports many plugins which add capabilities for developing different types of applications and different tools.
+- As long as the LoadingState of a component or the LoadingState of one of its children 
+is still LOADING, a loader will be shown.
+- When a component's LoadingState has become SUCCESS, it will only be reevaluated when
+its own LoadingState changes.
+- When a component's LoadingState is EMPTY, the empty state will be shown.
+- When a component's LoadingState is ERROR, or one of its child components' LoadingStates
+is either EMPTY or ERROR, an error state is shown
 
-These capabilities include generating applications, libraries, etc as well as the devtools to test, and build projects as well.
+## Show me the code
 
-Below are our core plugins:
+Wrap your component with the <app-suspense> tag and provide a loading state.
 
-- [Angular](https://angular.io)
-  - `ng add @nrwl/angular`
-- [React](https://reactjs.org)
-  - `ng add @nrwl/react`
-- Web (no framework frontends)
-  - `ng add @nrwl/web`
-- [Nest](https://nestjs.com)
-  - `ng add @nrwl/nest`
-- [Express](https://expressjs.com)
-  - `ng add @nrwl/express`
-- [Node](https://nodejs.org)
-  - `ng add @nrwl/node`
+```angular2html
+<app-suspense [loadingState]="loadingMoviesState$ | async">
+  
+  <app-movie [movie]="movie$ | async"></app-movie>
 
-There are also many [community plugins](https://nx.dev/community) you could add.
+  <app-suspense [loadingState]="loadingActorsState$ | async">
+    <app-actors [actors]="actors$ | async"></app-actors>
+  </app-suspense>
 
-## Generate an application
+</app-suspense>
+```
+Note that this also works with a route hierarchy. If there exist a loading state in the
+child hierarchy, display will be supsended until all child components have been loaded.
 
-Run `ng g @nrwl/angular:app my-app` to generate an application.
+```angular2html
+<app-suspense [loadingState]="loadingMoviesState$ | async">
+  
+  <app-movie [movie]="movie$ | async"></app-movie>
 
-> You can use any of the plugins above to generate applications as well.
+  <router-outlet></router-outlet>
 
-When using Nx, you can create multiple applications and libraries in the same workspace.
+</app-suspense>
+```
 
-## Generate a library
+## StopPropagation
 
-Run `ng g @nrwl/angular:lib my-lib` to generate a library.
+Sometimes it does not matter whether a part of the page has been loaded or not. In
+that case we can mark that part as not being part of the merge with the 
+[stopPropagation] tag:
 
-> You can also use any of the plugins above to generate libraries as well.
+```angular2html
+<app-suspense [loadingState]="loadingMoviesState$ | async">
+  
+  <app-movie [movie]="movie$ | async"></app-movie>
 
-Libraries are shareable across libraries and applications. They can be imported from `@angular-suspense/mylib`.
+  <app-suspense 
+    [stopPropagation]="true"
+    [loadingState]="loadingActorsState$ | async">
+    <app-actors [actors]="actors$ | async"></app-actors>
+  </app-suspense>
 
-## Development server
+</app-suspense>
+```
 
-Run `ng serve my-app` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
+## Error boundaries
 
-## Code scaffolding
+When you don't want the error state of a child to impact its parent's loading state,
+you can set an error boundary with the catchError attribute:
 
-Run `ng g component my-component --project=my-app` to generate a new component.
+```angular2html
+<app-suspense [loadingState]="loadingMoviesState$ | async">
+  
+  <app-movie [movie]="movie$ | async"></app-movie>
 
-## Build
+  <app-suspense 
+    [catchError]="true"
+    [loadingState]="loadingActorsState$ | async">
+    <app-actors [actors]="actors$ | async"></app-actors>
+  </app-suspense>
 
-Run `ng build my-app` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+</app-suspense>
+```
 
-## Running unit tests
+## Customizing the loading, error and empty states
 
-Run `ng test my-app` to execute the unit tests via [Jest](https://jestjs.io).
+### Globally
 
-Run `nx affected:test` to execute the unit tests affected by a change.
+Provide app-suspense-default-templates component on the page 
 
-## Running end-to-end tests
+```angular2html
+@Component({
+  selector: 'demo-loading-states',
+  template: `
+    <app-suspense-default-templates>
+      <ng-template appLoading> This is my global loading state </ng-template>
+      <ng-template appEmpty> This is my global empty state </ng-template>
+      <ng-template appError> This is my global error state </ng-template>
+    </app-suspense-default-templates>
+  `,
+})
+export class LoadingStatesComponent {}
 
-Run `ng e2e my-app` to execute the end-to-end tests via [Cypress](https://www.cypress.io).
+```
 
-Run `nx affected:e2e` to execute the end-to-end tests affected by a change.
+### Per case
 
-## Understand your workspace
+Provide ng-templates with appLoading, appSuccess, appEmpty and appError directives
 
-Run `nx dep-graph` to see a diagram of the dependencies of your projects.
+```angular2html
+<app-suspense [loadingState]="loadingMoviesState$ | async">
+    <ng-template appLoading>
+      <div class="loading">loading...</div>
+    </ng-template>
+    <div appSuccess>
+        <app-movie [movie]="movie$ | async"></app-movie>
+        <router-outlet></router-outlet>
+    </div>
+    <ng-template appEmpty>NOTHING HERE</ng-template>
+    <ng-template appError>OOPS</ng-template>
+</app-suspense>
+```
 
-## Further help
+## Roadmap
 
-Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
-
-
-
-
-
-
-## ☁ Nx Cloud
-
-### Distributed Computation Caching & Distributed Task Execution
-
-<p style="text-align: center;"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-cloud-card.png"></p>
-
-Nx Cloud pairs with Nx in order to enable you to build and test code more rapidly, by up to 10 times. Even teams that are new to Nx can connect to Nx Cloud and start saving time instantly.
-
-Teams using Nx gain the advantage of building full-stack applications with their preferred framework alongside Nx’s advanced code generation and project dependency graph, plus a unified experience for both frontend and backend developers.
-
-Visit [Nx Cloud](https://nx.app/) to learn more.
+- better documentation
+- better examples
+- unit tests
+- introduce time outs
+- introduce SuspensePipes, e.g. to work with ng-select

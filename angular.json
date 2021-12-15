@@ -118,6 +118,74 @@
       },
       "tags": [],
       "implicitDependencies": ["demo"]
+    },
+    "demo-feature-movies": {
+      "projectType": "library",
+      "root": "libs/demo/feature-movies",
+      "sourceRoot": "libs/demo/feature-movies/src",
+      "prefix": "angular-suspense",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/demo/feature-movies"],
+          "options": {
+            "jestConfig": "libs/demo/feature-movies/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/demo/feature-movies/src/**/*.ts",
+              "libs/demo/feature-movies/src/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": []
+    },
+    "shared-suspense": {
+      "projectType": "library",
+      "root": "libs/shared/suspense",
+      "sourceRoot": "libs/shared/suspense/src",
+      "prefix": "angular-suspense",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "outputs": ["dist/libs/shared/suspense"],
+          "options": {
+            "project": "libs/shared/suspense/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/shared/suspense/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "libs/shared/suspense/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/suspense"],
+          "options": {
+            "jestConfig": "libs/shared/suspense/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/shared/suspense/src/**/*.ts",
+              "libs/shared/suspense/src/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": []
     }
   }
 }

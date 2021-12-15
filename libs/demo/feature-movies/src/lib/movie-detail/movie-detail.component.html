@@ -1,0 +1,65 @@
+<app-suspense
+  [debug]="'movie-detail'"
+  [loadingState]="loadingStateMovie$ | async"
+>
+  <!--    <ng-template appLoading> loading... </ng-template>-->
+
+  <div appSuccess>
+    <div>
+      <b>synopsis</b>
+      {{ (movie$ | async)?.synopsis }}
+    </div>
+
+    <div>
+      <demo-avatar
+        [givenName]="actor.givenName"
+        [lastName]="actor.lastName"
+        *ngFor="let actor of (movie$ | async)?.actors"
+        (click)="onSelectActor(actor.id)"
+      ></demo-avatar>
+
+      <!--        todo initial state can only be loading if we immediately start searching!-->
+      <app-suspense
+        [loadingState]="loadingStateActor$$ | async"
+        [stopPropagation]="true"
+      >
+        <ng-template appLoading> loading...</ng-template>
+
+        <div appSuccess>
+          {{ actor$$ | async | json }}
+        </div>
+
+        <ng-template appError>error</ng-template>
+        <ng-template appEmpty>empty</ng-template>
+      </app-suspense>
+    </div>
+  </div>
+
+  <ng-template appError>error</ng-template>
+  <ng-template appEmpty>empty</ng-template>
+</app-suspense>
+
+<!--  <div appSuccess>-->
+<!--    <p>movie-detail</p>-->
+<!--    {{movie$ | async | json}}-->
+
+<!--    <demo-actors [actors]="(movie$ | async)?.actors"></demo-actors>-->
+
+<!--    <demo-actor [actor]='actor' *ngFor='let actor of actors$ | async'></demo-actor>-->
+<!--  </div>-->
+<!--  <ng-template appError>error</ng-template>-->
+<!--  <ng-template appEmpty>empty</ng-template>-->
+<!--</app-suspense>-->
+<!--<app-suspense [debug]="'movie-detail'" [loadingState]="loadingState$ | async">-->
+<!--  <ng-template appLoading>loading</ng-template>-->
+<!--  <div appSuccess>-->
+<!--    <p>movie-detail</p>-->
+<!--    {{movie$ | async | json}}-->
+
+<!--    <demo-actors [actors]="(movie$ | async)?.actors"></demo-actors>-->
+
+<!--    <demo-actor [actor]='actor' *ngFor='let actor of actors$ | async'></demo-actor>-->
+<!--  </div>-->
+<!--  <ng-template appError>error</ng-template>-->
+<!--  <ng-template appEmpty>empty</ng-template>-->
+<!--</app-suspense>-->
