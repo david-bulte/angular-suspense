@@ -39,7 +39,7 @@ is either EMPTY or ERROR, an error state is shown
 
 ## Show me the code
 
-Wrap your component with the <app-suspense> tag and provide a loading state.
+Wrap your component with the app-suspense tag and provide a loading state.
 
 ```angular2html
 <app-suspense [loadingState]="loadingMoviesState$ | async">
@@ -68,8 +68,8 @@ child hierarchy, display will be supsended until all child components have been 
 ## StopPropagation
 
 Sometimes it does not matter whether a part of the page has been loaded or not. In
-that case we can mark that part as not being part of the merge with the 
-[stopPropagation] tag:
+that case we can mark that part as not being part of the parent's loading state via the 
+[stopPropagation] attribute:
 
 ```angular2html
 <app-suspense [loadingState]="loadingMoviesState$ | async">
@@ -108,7 +108,7 @@ you can set an error boundary with the catchError attribute:
 
 ### Globally
 
-Provide app-suspense-default-templates component on the page 
+Provide the app-suspense-default-templates component on your top page. 
 
 ```angular2html
 @Component({
@@ -146,7 +146,12 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 ## Roadmap
 
 - better documentation
+- think of better prefix
+- logo :)
 - better examples
+- demo app
+- set up github actions
 - unit tests
-- introduce time outs
+- introduce timeouts
 - introduce SuspensePipes, e.g. to work with ng-select
+- publish to npm
