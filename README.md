@@ -155,4 +155,4 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 - introduce timeouts
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
-- call it Suspense state iso LoadingState
+- call it SuspenseState iso LoadingState
