@@ -2,7 +2,7 @@
 
 Work in progress folks. Stay tuned.
 
-##Intro
+## Intro
 
 Showing content as soon as it arrives can be nice thing to pursue. However, 
 when this results in a page full of spinners, skeleton loaders and what not, the 
