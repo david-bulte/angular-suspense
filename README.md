@@ -4,7 +4,7 @@ Work in progress folks. Stay tuned.
 
 ## Intro
 
-Showing content as soon as it arrives can be nice thing to pursue. However, 
+Showing content as soon as it arrives can be a nice thing to pursue. However, 
 when this results in a page full of spinners, skeleton loaders and what not, the 
 user experience becomes less joyful. Somewhere there exists a balance between 
 fast load times and jankless web pages, and with AngularSuspense, developers don't 
@@ -155,3 +155,4 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 - introduce timeouts
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
+- call it Suspense state iso LoadingState
