@@ -11,6 +11,7 @@ import { MovieQuery, MovieStore } from './movie.repo';
 })
 export class MovieService {
   movies$ = this.movieQuery.selectAll();
+  activeMovieId$ = this.movieQuery.selectActiveId();
   genres$ = this.movieApi.listGenres();
 
   loadingState$ = combineLatest([
@@ -100,7 +101,7 @@ export class MovieService {
 
 export interface Movie {
   name: string;
-  director: string;
+  director: Actor;
   genre: string;
   synopsis: string;
   year: number;
@@ -109,6 +110,7 @@ export interface Movie {
 
 export interface Actor {
   id: number;
-  givenName: string;
   lastName: string;
+  firstName: string;
+  summary?: string;
 }

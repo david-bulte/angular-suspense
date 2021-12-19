@@ -16,6 +16,10 @@ export class SuccessDirective {
   }
 
   hide() {
+    console.log(
+      'this.elementRef.nativeElement.style.display',
+      this.elementRef.nativeElement.style.display
+    );
     this.renderer.setStyle(this.elementRef.nativeElement, 'display', 'none');
   }
 }

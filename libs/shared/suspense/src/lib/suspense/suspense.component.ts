@@ -89,6 +89,10 @@ export class SuspenseComponent
     parent?.registerChild(this);
   }
 
+  get debugLoadingStatesInTemplate() {
+    return this.suspenseService.debugLoadingStatesInTemplate;
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.loadingState) {
       this.localLoadingState$$.next(

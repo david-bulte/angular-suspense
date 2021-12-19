@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, of, switchMap } from 'rxjs';
 import { MovieService } from '../movie.service';
 
@@ -13,15 +14,24 @@ export class MoviesComponent implements OnInit {
 
   loadingState$ = this.movieService.loadingState$;
   movies$ = this.movieService.movies$;
+  activeMovieId$ = this.movieService.activeMovieId$;
 
   genre$$ = new BehaviorSubject<string | null>(null);
 
-  constructor(private movieService: MovieService) {}
+  constructor(
+    private movieService: MovieService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.genre$$
       .pipe(switchMap((genre) => this.movieService.loadAll(genre)))
       .subscribe();
+  }
+
+  showDetails(movieId: string) {
+    this.router.navigate([movieId], { relativeTo: this.route });
   }
 
   onSelectGenre(genre: any) {

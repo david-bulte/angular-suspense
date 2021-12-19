@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SuspenseService } from '@david-bulte/angular-suspense';
 
 @Component({
   selector: 'angular-suspense-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'demo';
+  constructor(private suspenseService: SuspenseService) {
+    this.suspenseService.debugLoadingStatesInTemplate = true;
+  }
 }

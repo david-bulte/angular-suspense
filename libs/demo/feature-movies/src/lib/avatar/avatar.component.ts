@@ -6,10 +6,10 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./avatar.component.css'],
 })
 export class AvatarComponent {
-  @Input() givenName!: string;
-  @Input() lastName!: string;
+  @Input() firstName?: string;
+  @Input() lastName?: string;
 
   get initials() {
-    return this.givenName?.[0] + this.lastName?.[0];
+    return (this.firstName?.[0] ?? '') + this.lastName?.[0];
   }
 }

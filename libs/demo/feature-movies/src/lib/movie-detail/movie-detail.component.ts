@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '@david-bulte/angular-suspense';
-import { BehaviorSubject, distinctUntilChanged, filter, map, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  map,
+  Observable,
+  take,
+} from 'rxjs';
 import { Actor, MovieService } from '../movie.service';
 
 @Component({
@@ -16,21 +22,29 @@ export class MovieDetailComponent implements OnInit {
   actor$$ = new BehaviorSubject<Actor | null>(null);
   loadingStateActor$$ = new BehaviorSubject(LoadingState.LOADING);
 
+  name$!: Observable<string>;
+
   constructor(
     private route: ActivatedRoute,
     private movieService: MovieService
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap
-      .pipe(
-        map((params) => params.get('name')),
-        filter((name) => !!name),
-        distinctUntilChanged()
-      )
-      .subscribe((name) => {
-        this.movieService.setActiveMovie(name);
-      });
+    this.name$ = this.route.paramMap.pipe(
+      map((params) => params.get('name') as string),
+      // filter((name) => !!name),
+      distinctUntilChanged()
+    );
+
+    // this.route.paramMap
+    //   .pipe(
+    //     map((params) => params.get('name')),
+    //     // filter((name) => !!name),
+    //     distinctUntilChanged()
+    //   )
+    this.name$.subscribe((name) => {
+      this.movieService.setActiveMovie(name);
+    });
 
     this.actors$.pipe(take(1)).subscribe((actors) => {
       if (actors?.length > 0) {
@@ -47,7 +61,9 @@ export class MovieDetailComponent implements OnInit {
     this.movieService.loadActor(id).subscribe(
       (actor) => {
         console.log('actor', actor);
-        this.loadingStateActor$$.next(LoadingState.SUCCESS);
+        this.loadingStateActor$$.next(
+          actor?.summary ? LoadingState.SUCCESS : LoadingState.EMPTY
+        );
         this.actor$$.next(actor);
       },
       (err) => {

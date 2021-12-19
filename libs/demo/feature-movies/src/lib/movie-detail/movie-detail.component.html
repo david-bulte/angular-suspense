@@ -1,65 +1,30 @@
 <app-suspense
-  [debug]="'movie-detail'"
+  [debug]="'detail'"
   [loadingState]="loadingStateMovie$ | async"
+  [catchError]="true"
+  *ngIf="name$ | async; else pleaseSelect"
 >
-  <!--    <ng-template appLoading> loading... </ng-template>-->
+  <demo-movie-card
+    *ngIf="movie$ | async as movie"
+    [movie]="movie"
+    (selectActor)="onSelectActor($event)"
+  >
+    <app-suspense
+      [debug]="'actor'"
+      [loadingState]="loadingStateActor$$ | async"
+      [stopPropagation]="false"
+    >
+      <div>
+        {{ (actor$$ | async)?.summary }}
+      </div>
 
-  <div appSuccess>
-    <div>
-      <b>synopsis</b>
-      {{ (movie$ | async)?.synopsis }}
-    </div>
-
-    <div>
-      <demo-avatar
-        [givenName]="actor.givenName"
-        [lastName]="actor.lastName"
-        *ngFor="let actor of (movie$ | async)?.actors"
-        (click)="onSelectActor(actor.id)"
-      ></demo-avatar>
-
-      <!--        todo initial state can only be loading if we immediately start searching!-->
-      <app-suspense
-        [loadingState]="loadingStateActor$$ | async"
-        [stopPropagation]="true"
-      >
-        <ng-template appLoading> loading...</ng-template>
-
-        <div appSuccess>
-          {{ actor$$ | async | json }}
-        </div>
-
-        <ng-template appError>error</ng-template>
-        <ng-template appEmpty>empty</ng-template>
-      </app-suspense>
-    </div>
-  </div>
-
-  <ng-template appError>error</ng-template>
-  <ng-template appEmpty>empty</ng-template>
+      <ng-template appEmpty>
+        <div>Nothing found about {{ (actor$$ | async)?.firstName }}</div>
+      </ng-template>
+    </app-suspense>
+  </demo-movie-card>
 </app-suspense>
 
-<!--  <div appSuccess>-->
-<!--    <p>movie-detail</p>-->
-<!--    {{movie$ | async | json}}-->
-
-<!--    <demo-actors [actors]="(movie$ | async)?.actors"></demo-actors>-->
-
-<!--    <demo-actor [actor]='actor' *ngFor='let actor of actors$ | async'></demo-actor>-->
-<!--  </div>-->
-<!--  <ng-template appError>error</ng-template>-->
-<!--  <ng-template appEmpty>empty</ng-template>-->
-<!--</app-suspense>-->
-<!--<app-suspense [debug]="'movie-detail'" [loadingState]="loadingState$ | async">-->
-<!--  <ng-template appLoading>loading</ng-template>-->
-<!--  <div appSuccess>-->
-<!--    <p>movie-detail</p>-->
-<!--    {{movie$ | async | json}}-->
-
-<!--    <demo-actors [actors]="(movie$ | async)?.actors"></demo-actors>-->
-
-<!--    <demo-actor [actor]='actor' *ngFor='let actor of actors$ | async'></demo-actor>-->
-<!--  </div>-->
-<!--  <ng-template appError>error</ng-template>-->
-<!--  <ng-template appEmpty>empty</ng-template>-->
-<!--</app-suspense>-->
+<ng-template #pleaseSelect>
+  <div>please select a movie</div>
+</ng-template>

@@ -10,4 +10,6 @@ export class SuspenseService {
   defaultErrorTemplate?: TemplateRef<ErrorDirective>;
   defaultLoadingTemplate?: TemplateRef<LoadingDirective>;
   defaultEmptyTemplate?: TemplateRef<EmptyDirective>;
+
+  debugLoadingStatesInTemplate = false;
 }

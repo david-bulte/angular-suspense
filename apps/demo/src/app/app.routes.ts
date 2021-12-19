@@ -14,6 +14,11 @@ export const routes: Routes = [
         path: ':name',
         component: MovieDetailComponent,
       },
+      {
+        path: '',
+        component: MovieDetailComponent,
+        pathMatch: 'full',
+      },
     ],
   },
   {
