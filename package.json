@@ -10,7 +10,7 @@
     "test": "nx test",
     "build:prod": "ng build --configuration production --base-href https://david-bulte.github.io/angular-suspense/",
     "test:headless": "ng test --watch=false --browsers=ChromeHeadless",
-    "build:gh-pages": "ng build --output-path docs --base-href /angular-suspense/"
+    "build:gh-pages": "ng build --configuration production --output-path docs --base-href /angular-suspense/"
   },
   "private": true,
   "dependencies": {

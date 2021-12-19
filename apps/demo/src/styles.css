@@ -1,20 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-/*@import 'tailwindcss/base';*/
-/*@import 'tailwindcss/components';*/
-/*@import 'tailwindcss/utilities';*/
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-html, body { height: 100%; }
-/*body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }*/
+html, body {
+    height: 100%;
+}
 
 @layer components {
-    /*.btn {*/
-    /*    @apply py-2 px-3 m-1 bg-blue-500 rounded text-white hover:bg-blue-700 rounded;*/
-    /*}*/
-
     body {
-        /*@apply flex items-center justify-center w-full h-full*/
         @apply w-full h-screen h-full
     }
 
@@ -46,11 +39,11 @@ html, body { height: 100%; }
         @apply hover:bg-blue-500 hover:text-white hover:cursor-pointer
     }
 
-    tr td:first-child{
+    tr td:first-child {
         @apply rounded-l-lg
     }
 
-    tr td:last-child{
+    tr td:last-child {
         @apply rounded-r-lg
     }
 
