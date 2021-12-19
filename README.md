@@ -161,3 +161,22 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
 - call it SuspenseState iso LoadingState
+
+## Lessons learned
+
+Just some quick notes on what I have learned while working on this project.
+
+#### Angular routing on github pages
+
+When deploying angular applications to github pages, you have to apply
+[a little hack](https://angular.io/guide/deployment#deploy-to-github-pages)
+to make routing work: copy *the compiled index.html* file and name it 404.html.
+Add the following to your github actions file to do just that:
+
+```yaml
+      - name: Copy index.html -> 404.html
+        uses: canastro/copy-file-action@master
+        with:
+          source: "dist/apps/demo/index.html"
+          target: "dist/apps/demo/404.html"
+```
