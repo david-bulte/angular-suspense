@@ -154,8 +154,8 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 - think of better prefix
 - logo :)
 - better examples
-- demo app
-- set up github actions
+- ~~set up demo app~~
+- ~~set up github actions~~
 - unit tests
 - introduce timeouts
 - introduce SuspensePipes, e.g. to work with ng-select
