@@ -36,12 +36,6 @@ export class MovieDetailComponent implements OnInit {
       distinctUntilChanged()
     );
 
-    // this.route.paramMap
-    //   .pipe(
-    //     map((params) => params.get('name')),
-    //     // filter((name) => !!name),
-    //     distinctUntilChanged()
-    //   )
     this.name$.subscribe((name) => {
       this.movieService.setActiveMovie(name);
     });
