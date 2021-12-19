@@ -8,6 +8,6 @@ import { SuspenseService } from '@david-bulte/angular-suspense';
 })
 export class AppComponent {
   constructor(private suspenseService: SuspenseService) {
-    this.suspenseService.debugLoadingStatesInTemplate = false;
+    this.suspenseService.debugLoadingStatesInTemplate = true;
   }
 }
