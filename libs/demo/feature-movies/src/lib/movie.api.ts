@@ -18,11 +18,11 @@ export class MovieApi {
     const movie = movies.find((movie) => movie.name === name);
 
     if (movie?.name === 'The Piano') {
-      return of({ ...movie, actors: actors[name] || [] }).pipe(delay(5000));
+      return of({ ...movie, actors: actors[name] || [] }).pipe(delay(2000));
     } else if (!movie) {
       return throwError('not found');
     } else {
-      return of({ ...movie, actors: actors[name] || [] }).pipe(delay(2000));
+      return of({ ...movie, actors: actors[name] || [] }).pipe(delay(1500));
     }
   }
 
@@ -34,7 +34,7 @@ export class MovieApi {
       });
     });
     const actor = _actors.find((actor) => actor.id === id);
-    return actor ? of(actor).pipe(delay(2000)) : EMPTY;
+    return actor ? of(actor).pipe(delay(1000)) : EMPTY;
   }
 
   listGenres() {

@@ -19,7 +19,7 @@
       </div>
 
       <ng-template appEmpty>
-        <div>Nothing found about {{ (actor$$ | async)?.firstName }}</div>
+        <div *ngIf="actor$$ | async as actor">Nothing found about {{ actor.firstName }}</div>
       </ng-template>
     </app-suspense>
   </demo-movie-card>

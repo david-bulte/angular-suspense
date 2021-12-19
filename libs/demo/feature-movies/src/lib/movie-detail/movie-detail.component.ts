@@ -38,14 +38,15 @@ export class MovieDetailComponent implements OnInit {
 
     this.name$.subscribe((name) => {
       this.movieService.setActiveMovie(name);
+      this.actor$$.next(null);
     });
 
     this.actors$.pipe(take(1)).subscribe((actors) => {
-      if (actors?.length > 0) {
-        this.onSelectActor(actors[0].id);
-      } else {
-        this.loadingStateActor$$.next(LoadingState.SUCCESS);
-      }
+      // if (actors?.length > 0) {
+      //   this.onSelectActor(actors[0].id);
+      // } else {
+      this.loadingStateActor$$.next(LoadingState.SUCCESS);
+      // }
     });
   }
 

@@ -14,6 +14,11 @@ The project was inspired by [react suspense](https://reactjs.org/docs/concurrent
 [react's error boundary](https://reactjs.org/docs/error-boundaries.html) and
 [remix](https://remix.run/).
 
+## Demo
+
+![img-1](assets/img/suspense.gif)
+
+
 ## How it works
 
 Components have their own loader component, i.e. SuspenseComponent.
