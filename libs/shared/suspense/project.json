@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "libs/shared/suspense",
+  "sourceRoot": "libs/shared/suspense/src",
+  "prefix": "angular-suspense",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["dist/libs/shared/suspense"],
+      "options": {
+        "project": "libs/shared/suspense/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/shared/suspense/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/shared/suspense/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/suspense"],
+      "options": {
+        "jestConfig": "libs/shared/suspense/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared/suspense/src/**/*.ts",
+          "libs/shared/suspense/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

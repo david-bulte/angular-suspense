@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/demo/feature-movies",
+  "sourceRoot": "libs/demo/feature-movies/src",
+  "prefix": "angular-suspense",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/demo/feature-movies"],
+      "options": {
+        "jestConfig": "libs/demo/feature-movies/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/demo/feature-movies/src/**/*.ts",
+          "libs/demo/feature-movies/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
