@@ -47,27 +47,29 @@ is either EMPTY or ERROR, an error state is shown
 Wrap your component with the app-suspense tag and provide a loading state.
 
 ```angular2html
-<app-suspense [loadingState]="loadingMoviesState$ | async">
-  
+
+<susp [loadingState]="loadingMoviesState$ | async">
+
   <app-movie [movie]="movie$ | async"></app-movie>
 
-  <app-suspense [loadingState]="loadingActorsState$ | async">
+  <susp [loadingState]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
-  </app-suspense>
+  </susp>
 
-</app-suspense>
+</susp>
 ```
 Note that this also works with a route hierarchy. If there exist a loading state in the
 child hierarchy, display will be supsended until all child components have been loaded.
 
 ```angular2html
-<app-suspense [loadingState]="loadingMoviesState$ | async">
-  
+
+<susp [loadingState]="loadingMoviesState$ | async">
+
   <app-movie [movie]="movie$ | async"></app-movie>
 
   <router-outlet></router-outlet>
 
-</app-suspense>
+</susp>
 ```
 
 ## StopPropagation
@@ -77,17 +79,18 @@ that case we can mark that part as not being part of the parent's loading state 
 [stopPropagation] attribute:
 
 ```angular2html
-<app-suspense [loadingState]="loadingMoviesState$ | async">
-  
+
+<susp [loadingState]="loadingMoviesState$ | async">
+
   <app-movie [movie]="movie$ | async"></app-movie>
 
-  <app-suspense 
+  <susp
     [stopPropagation]="true"
     [loadingState]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
-  </app-suspense>
+  </susp>
 
-</app-suspense>
+</susp>
 ```
 
 ## Error boundaries
@@ -96,17 +99,18 @@ When you don't want the error state of a child to impact its parent's loading st
 you can set an error boundary with the catchError attribute:
 
 ```angular2html
-<app-suspense [loadingState]="loadingMoviesState$ | async">
-  
+
+<susp [loadingState]="loadingMoviesState$ | async">
+
   <app-movie [movie]="movie$ | async"></app-movie>
 
-  <app-suspense 
+  <susp
     [catchError]="true"
     [loadingState]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
-  </app-suspense>
+  </susp>
 
-</app-suspense>
+</susp>
 ```
 
 ## Customizing the loading, error and empty states
@@ -135,23 +139,24 @@ export class LoadingStatesComponent {}
 Provide ng-templates with appLoading, appSuccess, appEmpty and appError directives
 
 ```angular2html
-<app-suspense [loadingState]="loadingMoviesState$ | async">
-    <ng-template appLoading>
-      <div class="loading">loading...</div>
-    </ng-template>
-    <div appSuccess>
-        <app-movie [movie]="movie$ | async"></app-movie>
-        <router-outlet></router-outlet>
-    </div>
-    <ng-template appEmpty>NOTHING HERE</ng-template>
-    <ng-template appError>OOPS</ng-template>
-</app-suspense>
+
+<susp [loadingState]="loadingMoviesState$ | async">
+  <ng-template suspLoading>
+    <div class="loading">loading...</div>
+  </ng-template>
+  <div suspSuccess>
+    <app-movie [movie]="movie$ | async"></app-movie>
+    <router-outlet></router-outlet>
+  </div>
+  <ng-template suspEmpty>NOTHING HERE</ng-template>
+  <ng-template suspError>OOPS</ng-template>
+</susp>
 ```
 
 ## Roadmap
 
 - better documentation
-- think of better prefix
+- ~~think of better prefix~~
 - logo :)
 - better examples
 - ~~set up demo app~~

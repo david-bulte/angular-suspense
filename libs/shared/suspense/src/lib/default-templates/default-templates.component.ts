@@ -11,7 +11,7 @@ import { LoadingDirective } from '../loading.directive';
 import { SuspenseService } from '../suspense.service';
 
 @Component({
-  selector: 'app-suspense-default-templates',
+  selector: 'susp-default-templates',
   templateUrl: './default-templates.component.html',
   styleUrls: ['./default-templates.component.css'],
 })

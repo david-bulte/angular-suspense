@@ -1,20 +1,20 @@
-<app-suspense
+<susp
   [debug]="data.debug"
   [loadingState]="loadingState$ | async"
   [catchError]="data.catchError"
   [stopPropagation]="data.stopPropagation"
 >
-  <ng-template appLoading>
+  <ng-template suspLoading>
     <div class="loading">loading...</div>
   </ng-template>
-  <div appSuccess>
+  <div suspSuccess>
     <h1>{{ data.debug }}</h1>
     <div *ngFor="let link of data.links">
       <a routerLink="{{ link }}">{{ link }}</a>
     </div>
 
     <div *ngIf="data.hasChild">
-      <demo-item
+      <app-item
         [data]="{
           debug: 'child',
           links: [],
@@ -25,11 +25,11 @@
           catchError: false,
           stopPropagation: false
         }"
-      ></demo-item>
+      ></app-item>
     </div>
 
     <router-outlet *ngIf="data.links.length > 0"></router-outlet>
   </div>
-  <ng-template appEmpty>empty</ng-template>
-  <ng-template appError>error (let-error)</ng-template>
-</app-suspense>
+  <ng-template suspEmpty>empty</ng-template>
+  <ng-template suspError>error (let-error)</ng-template>
+</susp>

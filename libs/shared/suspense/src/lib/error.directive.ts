@@ -1,8 +1,6 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appError]'
+  selector: '[suspError]',
 })
-export class ErrorDirective {
-
-}
+export class ErrorDirective {}

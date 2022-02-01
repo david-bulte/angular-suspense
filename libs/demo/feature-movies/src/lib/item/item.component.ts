@@ -4,7 +4,7 @@ import { LoadingState } from '@david-bulte/angular-suspense';
 import { BehaviorSubject, timer } from 'rxjs';
 
 @Component({
-  selector: 'demo-item',
+  selector: 'app-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.css'],
 })

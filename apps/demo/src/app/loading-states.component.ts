@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'demo-loading-states',
+  selector: 'app-loading-states',
   template: `
-    <app-suspense-default-templates>
-      <ng-template appLoading>
+    <susp-default-templates>
+      <ng-template suspLoading>
         <div
           class="flex justify-center items-center space-x-1 text-sm text-gray-700 h-full w-full"
         >
@@ -25,9 +25,9 @@ import { Component } from '@angular/core';
           <div>Loading ...</div>
         </div>
       </ng-template>
-      <ng-template appEmpty> This is my global empty state</ng-template>
-      <ng-template appError> This is my global error state</ng-template>
-    </app-suspense-default-templates>
+      <ng-template suspEmpty> This is my global empty state</ng-template>
+      <ng-template suspError> This is my global error state</ng-template>
+    </susp-default-templates>
   `,
 })
 export class LoadingStatesComponent {}

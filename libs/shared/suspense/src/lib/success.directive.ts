@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostBinding, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[appSuccess]',
+  selector: '[suspSuccess]',
 })
 export class SuccessDirective {
   @HostBinding('style.display')

@@ -1,11 +1,8 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[appTarget]'
+  selector: '[suspTarget]',
 })
 export class TargetDirective {
-
-  constructor(public vcr: ViewContainerRef) {
-  }
-
+  constructor(public vcr: ViewContainerRef) {}
 }

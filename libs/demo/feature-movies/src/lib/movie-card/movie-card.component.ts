@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Movie } from '../movie.service';
 
 @Component({
-  selector: 'demo-movie-card',
+  selector: 'app-movie-card',
   templateUrl: './movie-card.component.html',
   styleUrls: ['./movie-card.component.css'],
 })

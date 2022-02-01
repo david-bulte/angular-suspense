@@ -12,22 +12,22 @@
 
     <div class="p-6 bg-white border-b border-gray-200">
       <div class="font-bold">Director</div>
-      <demo-avatar
+      <app-avatar
         [firstName]="movie?.director?.firstName"
         [lastName]="movie?.director?.lastName"
       >
         {{ movie?.director?.firstName + ' ' + movie?.director?.lastName }}
-      </demo-avatar>
+      </app-avatar>
     </div>
 
     <div class="p-6 bg-white border-b border-gray-200">
       <div class="font-bold">Actors</div>
-      <demo-avatar
+      <app-avatar
         [firstName]="actor.firstName"
         [lastName]="actor.lastName"
         *ngFor="let actor of movie?.actors"
         (click)="selectActor.emit(actor.id)"
-      ></demo-avatar>
+      ></app-avatar>
 
       <ng-content></ng-content>
     </div>

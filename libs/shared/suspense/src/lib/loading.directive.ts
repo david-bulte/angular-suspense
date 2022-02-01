@@ -1,8 +1,6 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appLoading]'
+  selector: '[suspLoading]',
 })
-export class LoadingDirective {
-
-}
+export class LoadingDirective {}

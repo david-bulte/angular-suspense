@@ -4,7 +4,7 @@
 >
   {{ debug }} : {{ loadingState | json }}
 </div>
-<ng-container class="target" appTarget></ng-container>
+<ng-container class="target" suspTarget></ng-container>
 <ng-content></ng-content>
 
-<ng-template appLoading> LOADING {{ debug }} </ng-template>
+<ng-template suspLoading> LOADING {{ debug }} </ng-template>

@@ -1,8 +1,6 @@
 import { Directive } from '@angular/core';
 
 @Directive({
-  selector: '[appEmpty]'
+  selector: '[suspEmpty]',
 })
-export class EmptyDirective {
-
-}
+export class EmptyDirective {}

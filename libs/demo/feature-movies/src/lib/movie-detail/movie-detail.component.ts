@@ -11,7 +11,7 @@ import {
 import { Actor, MovieService } from '../movie.service';
 
 @Component({
-  selector: 'demo-movie-detail',
+  selector: 'app-movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.css'],
 })

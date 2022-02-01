@@ -2,7 +2,7 @@
   "projectType": "library",
   "root": "libs/demo/feature-movies",
   "sourceRoot": "libs/demo/feature-movies/src",
-  "prefix": "angular-suspense",
+  "prefix": "app",
   "targets": {
     "test": {
       "executor": "@nrwl/jest:jest",
