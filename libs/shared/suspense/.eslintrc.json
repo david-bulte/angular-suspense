@@ -13,7 +13,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "angularSuspense",
+            "prefix": "susp",
             "style": "camelCase"
           }
         ],
@@ -21,7 +21,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "angular-suspense",
+            "prefix": "susp",
             "style": "kebab-case"
           }
         ]

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, of, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { MovieService } from '../movie.service';
 
 @Component({
-  selector: 'demo-movies',
+  selector: 'app-movies',
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.css'],
 })

@@ -1,6 +1,6 @@
-<app-suspense [debug]="'all'" class="h-full">
+<susp [debug]="'all'" class="h-full">
 
-  <div appSuccess class="h-full">
+  <div suspSuccess class="h-full">
 
     <div class="h-full flex justify-items-stretch flex-col lg:flex-row">
       <div class="w-full lg:w-96">
@@ -14,7 +14,7 @@
             {{ genre }}
           </button>
 
-          <app-suspense [debug]="'movies'" [loadingState]="loadingState$ | async">
+          <susp [debug]="'movies'" [loadingState]="loadingState$ | async">
             <table>
               <thead>
               <tr>
@@ -47,7 +47,7 @@
               </tr>
               </tbody>
             </table>
-          </app-suspense>
+          </susp>
         </div>
 
       </div>
@@ -56,7 +56,7 @@
       </div>
     </div>
   </div>
-</app-suspense>
+</susp>
 
 
 <!--<div>-->

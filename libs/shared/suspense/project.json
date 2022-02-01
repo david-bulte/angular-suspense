@@ -2,7 +2,7 @@
   "projectType": "library",
   "root": "libs/shared/suspense",
   "sourceRoot": "libs/shared/suspense/src",
-  "prefix": "angular-suspense",
+  "prefix": "susp",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:package",

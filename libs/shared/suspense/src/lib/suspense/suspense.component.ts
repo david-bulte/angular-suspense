@@ -38,7 +38,8 @@ import { SuspenseService } from '../suspense.service';
 import { TargetDirective } from '../target.directive';
 
 @Component({
-  selector: 'app-suspense',
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'susp',
   templateUrl: './suspense.component.html',
   styleUrls: ['./suspense.component.css'],
 })

@@ -1,15 +1,15 @@
-<app-suspense
+<susp
   [debug]="'detail'"
   [loadingState]="loadingStateMovie$ | async"
   [catchError]="true"
   *ngIf="name$ | async; else pleaseSelect"
 >
-  <demo-movie-card
+  <app-movie-card
     *ngIf="movie$ | async as movie"
     [movie]="movie"
     (selectActor)="onSelectActor($event)"
   >
-    <app-suspense
+    <susp
       [debug]="'actor'"
       [loadingState]="loadingStateActor$$ | async"
       [stopPropagation]="false"
@@ -18,12 +18,12 @@
         {{ (actor$$ | async)?.summary }}
       </div>
 
-      <ng-template appEmpty>
+      <ng-template suspEmpty>
         <div *ngIf="actor$$ | async as actor">Nothing found about {{ actor.firstName }}</div>
       </ng-template>
-    </app-suspense>
-  </demo-movie-card>
-</app-suspense>
+    </susp>
+  </app-movie-card>
+</susp>
 
 <ng-template #pleaseSelect>
   <div>please select a movie</div>
