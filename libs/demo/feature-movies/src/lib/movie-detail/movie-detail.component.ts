@@ -33,7 +33,6 @@ export class MovieDetailComponent implements OnInit {
   ngOnInit(): void {
     this.name$ = this.route.paramMap.pipe(
       map((params) => params.get('name') as string),
-      // filter((name) => !!name),
       distinctUntilChanged()
     );
 
@@ -42,12 +41,8 @@ export class MovieDetailComponent implements OnInit {
       this.actor$$.next(null);
     });
 
-    this.actors$.pipe(take(1)).subscribe((actors) => {
-      // if (actors?.length > 0) {
-      //   this.onSelectActor(actors[0].id);
-      // } else {
+    this.actors$.pipe(take(1)).subscribe(() => {
       this.loadingStateActor$$.next(LoadingState.SUCCESS);
-      // }
     });
   }
 
@@ -62,7 +57,7 @@ export class MovieDetailComponent implements OnInit {
         );
         this.actor$$.next(actor);
       },
-      (err) => {
+      () => {
         this.loadingStateActor$$.next(LoadingState.ERROR);
       }
     );
