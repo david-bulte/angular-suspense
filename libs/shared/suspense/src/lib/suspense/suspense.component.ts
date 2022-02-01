@@ -1,6 +1,7 @@
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -42,6 +43,7 @@ import { TargetDirective } from '../target.directive';
   selector: 'susp',
   templateUrl: './suspense.component.html',
   styleUrls: ['./suspense.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SuspenseComponent
   implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy

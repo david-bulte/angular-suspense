@@ -1,4 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '@david-bulte/angular-suspense';
 import { BehaviorSubject, timer } from 'rxjs';
@@ -7,6 +12,7 @@ import { BehaviorSubject, timer } from 'rxjs';
   selector: 'app-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent implements OnInit {
   loadingState$ = new BehaviorSubject(LoadingState.LOADING);

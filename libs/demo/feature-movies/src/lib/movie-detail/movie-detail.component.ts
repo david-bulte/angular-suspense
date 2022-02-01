@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '@david-bulte/angular-suspense';
 import {
@@ -14,6 +14,7 @@ import { Actor, MovieService } from '../movie.service';
   selector: 'app-movie-detail',
   templateUrl: './movie-detail.component.html',
   styleUrls: ['./movie-detail.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieDetailComponent implements OnInit {
   loadingStateMovie$ = this.movieService.loadingStateMovie$;
