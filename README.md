@@ -48,11 +48,11 @@ Wrap your component with the susp tag and provide a loading state.
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
-  <susp [loadingState]="loadingActorsState$ | async">
+  <susp [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
@@ -63,7 +63,7 @@ child hierarchy, display will be supsended until all child components have been 
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
@@ -80,13 +80,13 @@ that case we can mark that part as not being part of the parent's loading state 
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
   <susp
     [stopPropagation]="true"
-    [loadingState]="loadingActorsState$ | async">
+    [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
@@ -100,13 +100,13 @@ you can set an error boundary with the catchError attribute:
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
   <susp
     [catchError]="true"
-    [loadingState]="loadingActorsState$ | async">
+    [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
@@ -140,7 +140,7 @@ Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError dire
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
   <ng-template suspLoading>
     <div class="loading">loading...</div>
   </ng-template>
@@ -165,7 +165,6 @@ Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError dire
 - introduce timeouts
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
-- call it SuspenseState iso LoadingState
 
 ## Lessons learned
 

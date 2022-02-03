@@ -48,7 +48,7 @@ export class SuspenseComponent
   implements OnChanges, AfterContentInit, OnDestroy
 {
   @Input() debug?: string;
-  @Input() loadingState: LoadingState | null = null;
+  @Input() state: LoadingState | null = null;
   @Input() catchError = false;
   @Input() stopPropagation = false;
 
@@ -89,9 +89,9 @@ export class SuspenseComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.loadingState) {
+    if (changes['state']) {
       this.localLoadingState$$.next(
-        changes.loadingState.currentValue || LoadingState.LOADING
+        changes['state'].currentValue || LoadingState.LOADING
       );
     }
   }
