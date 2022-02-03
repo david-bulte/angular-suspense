@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
@@ -43,10 +42,10 @@ import { TargetDirective } from '../target.directive';
   selector: 'susp',
   templateUrl: './suspense.component.html',
   styleUrls: ['./suspense.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuspenseComponent
-  implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy
+  implements OnChanges, AfterContentInit, OnDestroy
 {
   @Input() debug?: string;
   @Input() loadingState: LoadingState | null = null;
@@ -54,18 +53,12 @@ export class SuspenseComponent
   @Input() stopPropagation = false;
 
   @ContentChild(SuccessDirective) successDirective!: SuccessDirective;
-  // @ContentChild(ErrorDirective, { read: TemplateRef })
-  // errorDirective!: TemplateRef<ErrorDirective>;
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
   @ContentChildren(LoadingDirective, { read: TemplateRef, descendants: false })
   loadingDirective!: QueryList<TemplateRef<LoadingDirective>>;
-  // @ContentChild(LoadingDirective, { read: TemplateRef, static: true })
-  // loadingDirective!: TemplateRef<LoadingDirective>;
   @ContentChildren(EmptyDirective, { read: TemplateRef, descendants: false })
   emptyDirective!: QueryList<TemplateRef<EmptyDirective>>;
-  // @ContentChild(EmptyDirective, { read: TemplateRef })
-  // emptyDirective!: TemplateRef<EmptyDirective>;
   @ViewChild(TargetDirective, { static: true }) container!: TargetDirective;
 
   // default templates
@@ -78,7 +71,6 @@ export class SuspenseComponent
 
   children: SuspenseComponent[] = [];
   private loadingRef?: EmbeddedViewRef<LoadingDirective>;
-  // private localLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
   private localLoadingState$$ = new BehaviorSubject(null);
   private publicLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
 
@@ -113,10 +105,6 @@ export class SuspenseComponent
       );
     }
     this.setupLoadingStateListener();
-  }
-
-  ngAfterViewInit(): void {
-    // this.setupLoadingStateListener();
   }
 
   ngOnDestroy(): void {
