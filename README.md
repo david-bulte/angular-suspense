@@ -44,7 +44,7 @@ is either EMPTY or ERROR, an error state is shown
 
 ## Show me the code
 
-Wrap your component with the app-suspense tag and provide a loading state.
+Wrap your component with the susp tag and provide a loading state.
 
 ```angular2html
 
@@ -117,17 +117,17 @@ you can set an error boundary with the catchError attribute:
 
 ### Globally
 
-Provide the app-suspense-default-templates component on your top page. 
+Provide the susp-default-templates component on your top page. 
 
 ```angular2html
 @Component({
   selector: 'demo-loading-states',
   template: `
-    <app-suspense-default-templates>
-      <ng-template appLoading> This is my global loading state </ng-template>
-      <ng-template appEmpty> This is my global empty state </ng-template>
-      <ng-template appError> This is my global error state </ng-template>
-    </app-suspense-default-templates>
+    <susp-default-templates>
+      <ng-template suspLoading> This is my global loading state </ng-template>
+      <ng-template suspEmpty> This is my global empty state </ng-template>
+      <ng-template suspError> This is my global error state </ng-template>
+    </susp-default-templates>
   `,
 })
 export class LoadingStatesComponent {}
@@ -136,7 +136,7 @@ export class LoadingStatesComponent {}
 
 ### Per case
 
-Provide ng-templates with appLoading, appSuccess, appEmpty and appError directives
+Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError directives
 
 ```angular2html
 
