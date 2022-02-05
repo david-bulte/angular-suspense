@@ -21,17 +21,19 @@ import {
 import {
   BehaviorSubject,
   combineLatest,
+  forkJoin,
+  Observable,
+  of,
+  timer,
+} from 'rxjs';
+import {
   debounce,
   distinctUntilChanged,
   filter,
-  forkJoin,
   map,
-  Observable,
-  of,
   startWith,
   takeWhile,
-  timer,
-} from 'rxjs';
+} from 'rxjs/operators';
 import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
 import { LoadingDirective } from '../loading.directive';
