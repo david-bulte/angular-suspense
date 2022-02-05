@@ -1,6 +1,6 @@
 <susp
   [debug]="'detail'"
-  [loadingState]="loadingStateMovie$ | async"
+  [state]="loadingStateMovie$ | async"
   [catchError]="true"
   *ngIf="name$ | async; else pleaseSelect"
 >
@@ -11,7 +11,7 @@
   >
     <susp
       [debug]="'actor'"
-      [loadingState]="loadingStateActor$$ | async"
+      [state]="loadingStateActor$$ | async"
       [stopPropagation]="false"
     >
       <div>

@@ -44,15 +44,15 @@ is either EMPTY or ERROR, an error state is shown
 
 ## Show me the code
 
-Wrap your component with the app-suspense tag and provide a loading state.
+Wrap your component with the susp tag and provide a loading state.
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
-  <susp [loadingState]="loadingActorsState$ | async">
+  <susp [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
@@ -63,7 +63,7 @@ child hierarchy, display will be supsended until all child components have been 
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
@@ -80,13 +80,13 @@ that case we can mark that part as not being part of the parent's loading state 
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
   <susp
     [stopPropagation]="true"
-    [loadingState]="loadingActorsState$ | async">
+    [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
@@ -100,34 +100,40 @@ you can set an error boundary with the catchError attribute:
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
 
   <app-movie [movie]="movie$ | async"></app-movie>
 
   <susp
     [catchError]="true"
-    [loadingState]="loadingActorsState$ | async">
+    [state]="loadingActorsState$ | async">
     <app-actors [actors]="actors$ | async"></app-actors>
   </susp>
 
 </susp>
 ```
 
+## Timeout
+
+Sometimes you want to wait a couple of microseconds before showing the loading state. In that
+case one can set the _timeout_ attribute of the SuspenseService. You can also set it case by 
+case by setting the SuspenseComponent's [timeout] input property.
+
 ## Customizing the loading, error and empty states
 
 ### Globally
 
-Provide the app-suspense-default-templates component on your top page. 
+Provide the susp-default-templates component on your top page. 
 
 ```angular2html
 @Component({
   selector: 'demo-loading-states',
   template: `
-    <app-suspense-default-templates>
-      <ng-template appLoading> This is my global loading state </ng-template>
-      <ng-template appEmpty> This is my global empty state </ng-template>
-      <ng-template appError> This is my global error state </ng-template>
-    </app-suspense-default-templates>
+    <susp-default-templates>
+      <ng-template suspLoading> This is my global loading state </ng-template>
+      <ng-template suspEmpty> This is my global empty state </ng-template>
+      <ng-template suspError> This is my global error state </ng-template>
+    </susp-default-templates>
   `,
 })
 export class LoadingStatesComponent {}
@@ -136,11 +142,11 @@ export class LoadingStatesComponent {}
 
 ### Per case
 
-Provide ng-templates with appLoading, appSuccess, appEmpty and appError directives
+Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError directives
 
 ```angular2html
 
-<susp [loadingState]="loadingMoviesState$ | async">
+<susp [state]="loadingMoviesState$ | async">
   <ng-template suspLoading>
     <div class="loading">loading...</div>
   </ng-template>
@@ -162,10 +168,10 @@ Provide ng-templates with appLoading, appSuccess, appEmpty and appError directiv
 - ~~set up demo app~~
 - ~~set up github actions~~
 - unit tests
-- introduce timeouts
+- ~~introduce timeouts~~
+- intermediate loading state template
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
-- call it SuspenseState iso LoadingState
 
 ## Lessons learned
 

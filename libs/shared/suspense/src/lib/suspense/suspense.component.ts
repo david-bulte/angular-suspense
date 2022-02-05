@@ -1,6 +1,5 @@
 import {
   AfterContentInit,
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
@@ -22,6 +21,7 @@ import {
 import {
   BehaviorSubject,
   combineLatest,
+  debounce,
   distinctUntilChanged,
   filter,
   forkJoin,
@@ -30,6 +30,7 @@ import {
   of,
   startWith,
   takeWhile,
+  timer,
 } from 'rxjs';
 import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
@@ -43,29 +44,24 @@ import { TargetDirective } from '../target.directive';
   selector: 'susp',
   templateUrl: './suspense.component.html',
   styleUrls: ['./suspense.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuspenseComponent
-  implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy
+  implements OnChanges, AfterContentInit, OnDestroy
 {
   @Input() debug?: string;
-  @Input() loadingState: LoadingState | null = null;
+  @Input() state: LoadingState | null = null;
+  @Input() timeout!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
 
   @ContentChild(SuccessDirective) successDirective!: SuccessDirective;
-  // @ContentChild(ErrorDirective, { read: TemplateRef })
-  // errorDirective!: TemplateRef<ErrorDirective>;
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
   @ContentChildren(LoadingDirective, { read: TemplateRef, descendants: false })
   loadingDirective!: QueryList<TemplateRef<LoadingDirective>>;
-  // @ContentChild(LoadingDirective, { read: TemplateRef, static: true })
-  // loadingDirective!: TemplateRef<LoadingDirective>;
   @ContentChildren(EmptyDirective, { read: TemplateRef, descendants: false })
   emptyDirective!: QueryList<TemplateRef<EmptyDirective>>;
-  // @ContentChild(EmptyDirective, { read: TemplateRef })
-  // emptyDirective!: TemplateRef<EmptyDirective>;
   @ViewChild(TargetDirective, { static: true }) container!: TargetDirective;
 
   // default templates
@@ -78,7 +74,6 @@ export class SuspenseComponent
 
   children: SuspenseComponent[] = [];
   private loadingRef?: EmbeddedViewRef<LoadingDirective>;
-  // private localLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
   private localLoadingState$$ = new BehaviorSubject(null);
   private publicLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
 
@@ -90,6 +85,7 @@ export class SuspenseComponent
     @Optional() @SkipSelf() private parent?: SuspenseComponent
   ) {
     parent?.registerChild(this);
+    this.timeout ??= this.suspenseService.timeout;
   }
 
   get debugLoadingStatesInTemplate() {
@@ -97,9 +93,9 @@ export class SuspenseComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.loadingState) {
+    if (changes['state']) {
       this.localLoadingState$$.next(
-        changes.loadingState.currentValue || LoadingState.LOADING
+        changes['state'].currentValue || LoadingState.LOADING
       );
     }
   }
@@ -113,10 +109,6 @@ export class SuspenseComponent
       );
     }
     this.setupLoadingStateListener();
-  }
-
-  ngAfterViewInit(): void {
-    // this.setupLoadingStateListener();
   }
 
   ngOnDestroy(): void {
@@ -172,20 +164,13 @@ export class SuspenseComponent
           )
         : of(LoadingState.SUCCESS);
 
-    combineLatest(localLoadingState$, childrenLoadingState$).subscribe(
-      ([localLoadingState, childrenLoadingState]) => {
-        console.log(
-          'item',
-          this.debug,
-          'combined states 1',
-          localLoadingState,
-          childrenLoadingState
-        );
-        const loadingState = extractLoadingState(
-          localLoadingState,
-          childrenLoadingState
-        );
-
+    combineLatest(localLoadingState$, childrenLoadingState$)
+      .pipe(
+        map((loadingStates) => this.extractLoadingState(loadingStates)),
+        debounce((status) => timer(this.getTimeout(status))),
+        distinctUntilChanged()
+      )
+      .subscribe((loadingState) => {
         console.log('item', this.debug, 'combined states 2', loadingState);
 
         this.successDirective?.hide();
@@ -240,7 +225,6 @@ export class SuspenseComponent
             break;
           case LoadingState.SUCCESS:
             if (!this.successDirective) {
-              console.log('yeag!!!!!!!!!!!!!!!!!');
               this.renderer.setAttribute(
                 this.elRef.nativeElement,
                 'visibility',
@@ -260,8 +244,7 @@ export class SuspenseComponent
           default:
           // all hidden
         }
-      }
-    );
+      });
   }
 
   private getEmptyDirective() {
@@ -282,29 +265,41 @@ export class SuspenseComponent
       ? this.errorDirective.first
       : this.suspenseService.defaultErrorTemplate || this.defaultErrorDirective;
   }
-}
 
-function extractLoadingState(
-  localLoadingState: LoadingState,
-  childrenLoadingState: LoadingState
-) {
-  if (
-    localLoadingState === LoadingState.SUCCESS &&
-    childrenLoadingState === LoadingState.SUCCESS
-  ) {
-    return LoadingState.SUCCESS;
-  } else if (
-    localLoadingState === LoadingState.ERROR ||
-    childrenLoadingState === LoadingState.ERROR
-  ) {
-    return LoadingState.ERROR;
-  } else if (
-    localLoadingState === LoadingState.EMPTY &&
-    childrenLoadingState !== LoadingState.LOADING
-  ) {
-    return LoadingState.EMPTY;
-  } else {
-    return LoadingState.LOADING;
+  private extractLoadingState([
+    localLoadingState,
+    childrenLoadingState,
+  ]: LoadingState[]) {
+    console.log(
+      'item',
+      this.debug,
+      'combined states 1',
+      localLoadingState,
+      childrenLoadingState
+    );
+
+    if (
+      localLoadingState === LoadingState.SUCCESS &&
+      childrenLoadingState === LoadingState.SUCCESS
+    ) {
+      return LoadingState.SUCCESS;
+    } else if (
+      localLoadingState === LoadingState.ERROR ||
+      childrenLoadingState === LoadingState.ERROR
+    ) {
+      return LoadingState.ERROR;
+    } else if (
+      localLoadingState === LoadingState.EMPTY &&
+      childrenLoadingState !== LoadingState.LOADING
+    ) {
+      return LoadingState.EMPTY;
+    } else {
+      return LoadingState.LOADING;
+    }
+  }
+
+  private getTimeout(status: LoadingState) {
+    return status === LoadingState.LOADING ? this.timeout : 0;
   }
 }
 

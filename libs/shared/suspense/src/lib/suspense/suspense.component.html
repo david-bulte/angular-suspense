@@ -2,7 +2,7 @@
   *ngIf="debugLoadingStatesInTemplate"
   class="absolute bg-orange-500 rounded opacity-70"
 >
-  {{ debug }} : {{ loadingState | json }}
+  {{ debug }} : {{ state | json }}
 </div>
 <ng-container class="target" suspTarget></ng-container>
 <ng-content></ng-content>

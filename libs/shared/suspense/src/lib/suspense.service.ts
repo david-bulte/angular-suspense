@@ -12,4 +12,5 @@ export class SuspenseService {
   defaultEmptyTemplate?: TemplateRef<EmptyDirective>;
 
   debugLoadingStatesInTemplate = false;
+  timeout = 0;
 }
