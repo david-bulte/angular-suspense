@@ -25,7 +25,8 @@
       "outputs": ["coverage/libs/suspense"],
       "options": {
         "jestConfig": "libs/suspense/jest.config.js",
-        "passWithNoTests": true
+        "passWithNoTests": true,
+        "codeCoverage": true
       }
     },
     "lint": {

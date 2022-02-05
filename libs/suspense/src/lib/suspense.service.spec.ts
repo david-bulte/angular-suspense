@@ -10,7 +10,11 @@ describe('SuspenseService', () => {
     service = TestBed.inject(SuspenseService);
   });
 
-  it('should be created', () => {
+  test('should be created', () => {
     expect(service).toBeTruthy();
+  });
+
+  test('default timeout value should be 0', () => {
+    expect(service.timeout).toBe(0);
   });
 });
