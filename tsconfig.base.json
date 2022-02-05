@@ -18,7 +18,7 @@
       "@angular-suspense/demo-feature-movies": [
         "libs/demo/feature-movies/src/index.ts"
       ],
-      "@david-bulte/angular-suspense": ["libs/shared/suspense/src/index.ts"]
+      "@david-bulte/angular-suspense": ["libs/suspense/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

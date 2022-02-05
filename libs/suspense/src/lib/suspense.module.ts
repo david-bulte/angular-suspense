@@ -28,4 +28,4 @@ import { DefaultTemplatesComponent } from './default-templates/default-templates
     DefaultTemplatesComponent,
   ],
 })
-export class SharedSuspenseModule {}
+export class SuspenseModule {}

@@ -1,6 +1,6 @@
 module.exports = {
-  displayName: 'shared-suspense',
-  preset: '../../../jest.preset.js',
+  displayName: 'suspense',
+  preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   globals: {
     'ts-jest': {
@@ -8,7 +8,7 @@ module.exports = {
       stringifyContentPathRegex: '\\.(html|svg)$',
     },
   },
-  coverageDirectory: '../../../coverage/libs/shared/suspense',
+  coverageDirectory: '../../coverage/libs/suspense',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
   },

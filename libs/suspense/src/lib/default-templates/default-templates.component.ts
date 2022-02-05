@@ -15,7 +15,7 @@ import { SuspenseService } from '../suspense.service';
   selector: 'susp-default-templates',
   templateUrl: './default-templates.component.html',
   styleUrls: ['./default-templates.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DefaultTemplatesComponent implements AfterContentInit {
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })

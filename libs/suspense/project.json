@@ -1,30 +1,30 @@
 {
   "projectType": "library",
-  "root": "libs/shared/suspense",
-  "sourceRoot": "libs/shared/suspense/src",
+  "root": "libs/suspense",
+  "sourceRoot": "libs/suspense/src",
   "prefix": "susp",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:package",
-      "outputs": ["dist/libs/shared/suspense"],
+      "outputs": ["dist/libs/suspense"],
       "options": {
-        "project": "libs/shared/suspense/ng-package.json"
+        "project": "libs/suspense/ng-package.json"
       },
       "configurations": {
         "production": {
-          "tsConfig": "libs/shared/suspense/tsconfig.lib.prod.json"
+          "tsConfig": "libs/suspense/tsconfig.lib.prod.json"
         },
         "development": {
-          "tsConfig": "libs/shared/suspense/tsconfig.lib.json"
+          "tsConfig": "libs/suspense/tsconfig.lib.json"
         }
       },
       "defaultConfiguration": "production"
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/libs/shared/suspense"],
+      "outputs": ["coverage/libs/suspense"],
       "options": {
-        "jestConfig": "libs/shared/suspense/jest.config.js",
+        "jestConfig": "libs/suspense/jest.config.js",
         "passWithNoTests": true
       }
     },
@@ -32,8 +32,8 @@
       "executor": "@nrwl/linter:eslint",
       "options": {
         "lintFilePatterns": [
-          "libs/shared/suspense/src/**/*.ts",
-          "libs/shared/suspense/src/**/*.html"
+          "libs/suspense/src/**/*.ts",
+          "libs/suspense/src/**/*.html"
         ]
       }
     }

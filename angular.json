@@ -4,11 +4,6 @@
     "demo": "apps/demo",
     "demo-e2e": "apps/demo-e2e",
     "demo-feature-movies": "libs/demo/feature-movies",
-    "shared-suspense": "libs/shared/suspense"
-  },
-  "schematics": {
-    "@schematics/angular:component": {
-      "changeDetection": "OnPush"
-    }
+    "suspense": "libs/suspense"
   }
 }

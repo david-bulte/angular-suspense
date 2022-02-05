@@ -1,4 +1,4 @@
-export * from './lib/shared-suspense.module';
+export * from './lib/suspense.module';
 export {
   SuspenseComponent,
   LoadingState,
