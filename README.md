@@ -113,6 +113,12 @@ you can set an error boundary with the catchError attribute:
 </susp>
 ```
 
+## Timeout
+
+Sometimes you want to wait a couple of microseconds before showing the loading state. In that
+case one can set the _timeout_ attribute of the SuspenseService. You can also set it case by 
+case by setting the SuspenseComponent's [timeout] input property.
+
 ## Customizing the loading, error and empty states
 
 ### Globally
@@ -162,7 +168,8 @@ Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError dire
 - ~~set up demo app~~
 - ~~set up github actions~~
 - unit tests
-- introduce timeouts
+- ~~introduce timeouts~~
+- intermediate loading state template
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
 

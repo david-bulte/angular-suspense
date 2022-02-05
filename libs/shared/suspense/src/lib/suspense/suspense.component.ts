@@ -21,6 +21,7 @@ import {
 import {
   BehaviorSubject,
   combineLatest,
+  debounce,
   distinctUntilChanged,
   filter,
   forkJoin,
@@ -29,6 +30,7 @@ import {
   of,
   startWith,
   takeWhile,
+  timer,
 } from 'rxjs';
 import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
@@ -49,6 +51,7 @@ export class SuspenseComponent
 {
   @Input() debug?: string;
   @Input() state: LoadingState | null = null;
+  @Input() timeout!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
 
@@ -82,6 +85,7 @@ export class SuspenseComponent
     @Optional() @SkipSelf() private parent?: SuspenseComponent
   ) {
     parent?.registerChild(this);
+    this.timeout ??= this.suspenseService.timeout;
   }
 
   get debugLoadingStatesInTemplate() {
@@ -160,20 +164,13 @@ export class SuspenseComponent
           )
         : of(LoadingState.SUCCESS);
 
-    combineLatest(localLoadingState$, childrenLoadingState$).subscribe(
-      ([localLoadingState, childrenLoadingState]) => {
-        console.log(
-          'item',
-          this.debug,
-          'combined states 1',
-          localLoadingState,
-          childrenLoadingState
-        );
-        const loadingState = extractLoadingState(
-          localLoadingState,
-          childrenLoadingState
-        );
-
+    combineLatest(localLoadingState$, childrenLoadingState$)
+      .pipe(
+        map((loadingStates) => this.extractLoadingState(loadingStates)),
+        debounce((status) => timer(this.getTimeout(status))),
+        distinctUntilChanged()
+      )
+      .subscribe((loadingState) => {
         console.log('item', this.debug, 'combined states 2', loadingState);
 
         this.successDirective?.hide();
@@ -228,7 +225,6 @@ export class SuspenseComponent
             break;
           case LoadingState.SUCCESS:
             if (!this.successDirective) {
-              console.log('yeag!!!!!!!!!!!!!!!!!');
               this.renderer.setAttribute(
                 this.elRef.nativeElement,
                 'visibility',
@@ -248,8 +244,7 @@ export class SuspenseComponent
           default:
           // all hidden
         }
-      }
-    );
+      });
   }
 
   private getEmptyDirective() {
@@ -270,29 +265,41 @@ export class SuspenseComponent
       ? this.errorDirective.first
       : this.suspenseService.defaultErrorTemplate || this.defaultErrorDirective;
   }
-}
 
-function extractLoadingState(
-  localLoadingState: LoadingState,
-  childrenLoadingState: LoadingState
-) {
-  if (
-    localLoadingState === LoadingState.SUCCESS &&
-    childrenLoadingState === LoadingState.SUCCESS
-  ) {
-    return LoadingState.SUCCESS;
-  } else if (
-    localLoadingState === LoadingState.ERROR ||
-    childrenLoadingState === LoadingState.ERROR
-  ) {
-    return LoadingState.ERROR;
-  } else if (
-    localLoadingState === LoadingState.EMPTY &&
-    childrenLoadingState !== LoadingState.LOADING
-  ) {
-    return LoadingState.EMPTY;
-  } else {
-    return LoadingState.LOADING;
+  private extractLoadingState([
+    localLoadingState,
+    childrenLoadingState,
+  ]: LoadingState[]) {
+    console.log(
+      'item',
+      this.debug,
+      'combined states 1',
+      localLoadingState,
+      childrenLoadingState
+    );
+
+    if (
+      localLoadingState === LoadingState.SUCCESS &&
+      childrenLoadingState === LoadingState.SUCCESS
+    ) {
+      return LoadingState.SUCCESS;
+    } else if (
+      localLoadingState === LoadingState.ERROR ||
+      childrenLoadingState === LoadingState.ERROR
+    ) {
+      return LoadingState.ERROR;
+    } else if (
+      localLoadingState === LoadingState.EMPTY &&
+      childrenLoadingState !== LoadingState.LOADING
+    ) {
+      return LoadingState.EMPTY;
+    } else {
+      return LoadingState.LOADING;
+    }
+  }
+
+  private getTimeout(status: LoadingState) {
+    return status === LoadingState.LOADING ? this.timeout : 0;
   }
 }
 
