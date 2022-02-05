@@ -167,7 +167,7 @@ Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError dire
 - better examples
 - ~~set up demo app~~
 - ~~set up github actions~~
-- unit tests
+- ~~unit tests~~
 - ~~introduce timeouts~~
 - intermediate loading state template
 - introduce SuspensePipes, e.g. to work with ng-select

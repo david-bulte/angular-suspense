@@ -164,87 +164,93 @@ export class SuspenseComponent
           )
         : of(LoadingState.SUCCESS);
 
-    combineLatest(localLoadingState$, childrenLoadingState$)
-      .pipe(
-        map((loadingStates) => this.extractLoadingState(loadingStates)),
-        debounce((status) => timer(this.getTimeout(status))),
-        distinctUntilChanged()
-      )
-      .subscribe((loadingState) => {
-        console.log('item', this.debug, 'combined states 2', loadingState);
+    // todo investigate - for some reason tests fail when using debounce
+    const combinedLoadingState$ =
+      this.timeout > 0
+        ? combineLatest(localLoadingState$, childrenLoadingState$).pipe(
+            map((loadingStates) => this.extractLoadingState(loadingStates)),
+            debounce((status) => timer(this.getTimeout(status))),
+            distinctUntilChanged()
+          )
+        : combineLatest(localLoadingState$, childrenLoadingState$).pipe(
+            map((loadingStates) => this.extractLoadingState(loadingStates))
+          );
 
-        this.successDirective?.hide();
-        this.container.vcr.clear();
+    combinedLoadingState$.subscribe((loadingState) => {
+      console.log('item', this.debug, 'combined states 2', loadingState);
 
-        switch (loadingState) {
-          case LoadingState.EMPTY:
-            this.loadingRef = this.container.vcr.createEmbeddedView(
-              this.getEmptyDirective()
-            );
-            console.log(
-              'item',
-              this.debug,
-              'publicLoadingState$$.next',
-              LoadingState.ERROR
-            );
-            this.publicLoadingState$$.next(
-              this.catchError || this.stopPropagation
-                ? LoadingState.SUCCESS
-                : LoadingState.ERROR
-            );
-            break;
-          case LoadingState.ERROR:
-            this.loadingRef = this.container.vcr.createEmbeddedView(
-              this.getErrorDirective()
-            );
-            console.log(
-              'item',
-              this.debug,
-              'publicLoadingState$$.next',
-              LoadingState.ERROR
-            );
-            this.publicLoadingState$$.next(
-              this.catchError || this.stopPropagation
-                ? LoadingState.SUCCESS
-                : LoadingState.ERROR
-            );
-            break;
-          case LoadingState.LOADING:
-            console.log(
-              'item',
-              this.debug,
-              'publicLoadingState$$.next',
-              LoadingState.LOADING
-            );
-            this.loadingRef = this.container.vcr.createEmbeddedView(
-              this.getLoadingDirective()
-            );
-            if (this.stopPropagation) {
-              this.publicLoadingState$$.next(LoadingState.SUCCESS);
-            }
-            break;
-          case LoadingState.SUCCESS:
-            if (!this.successDirective) {
-              this.renderer.setAttribute(
-                this.elRef.nativeElement,
-                'visibility',
-                'visible'
-              );
-            } else {
-              this.successDirective?.show();
-            }
-            console.log(
-              'item',
-              this.debug,
-              'publicLoadingState$$.next',
-              LoadingState.SUCCESS
-            );
+      this.successDirective?.hide();
+      this.container.vcr.clear();
+
+      switch (loadingState) {
+        case LoadingState.EMPTY:
+          this.loadingRef = this.container.vcr.createEmbeddedView(
+            this.getEmptyDirective()
+          );
+          console.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.ERROR
+          );
+          this.publicLoadingState$$.next(
+            this.catchError || this.stopPropagation
+              ? LoadingState.SUCCESS
+              : LoadingState.ERROR
+          );
+          break;
+        case LoadingState.ERROR:
+          this.loadingRef = this.container.vcr.createEmbeddedView(
+            this.getErrorDirective()
+          );
+          console.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.ERROR
+          );
+          this.publicLoadingState$$.next(
+            this.catchError || this.stopPropagation
+              ? LoadingState.SUCCESS
+              : LoadingState.ERROR
+          );
+          break;
+        case LoadingState.LOADING:
+          console.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.LOADING
+          );
+          this.loadingRef = this.container.vcr.createEmbeddedView(
+            this.getLoadingDirective()
+          );
+          if (this.stopPropagation) {
             this.publicLoadingState$$.next(LoadingState.SUCCESS);
-            break;
-          default:
-          // all hidden
-        }
-      });
+          }
+          break;
+        case LoadingState.SUCCESS:
+          if (!this.successDirective) {
+            this.renderer.setAttribute(
+              this.elRef.nativeElement,
+              'visibility',
+              'visible'
+            );
+          } else {
+            this.successDirective?.show();
+          }
+          console.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.SUCCESS
+          );
+          this.publicLoadingState$$.next(LoadingState.SUCCESS);
+          break;
+        default:
+        // all hidden
+      }
+    });
   }
 
   private getEmptyDirective() {
