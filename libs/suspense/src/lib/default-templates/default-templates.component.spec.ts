@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoadingDirective } from '@david-bulte/angular-suspense';
-import { SuspenseService } from '../suspense.service';
-
-import { DefaultTemplatesComponent } from './default-templates.component';
+import { SuspenseModule, SuspenseService } from '../..';
 
 @Component({
   template: `
@@ -22,11 +19,8 @@ describe('DefaultTemplatesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        TestDefaultTemplatesComponent,
-        DefaultTemplatesComponent,
-        LoadingDirective,
-      ],
+      declarations: [TestDefaultTemplatesComponent],
+      imports: [SuspenseModule.forRoot()],
     }).compileComponents();
   });
 

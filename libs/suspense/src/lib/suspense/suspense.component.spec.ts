@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
-import { EmptyDirective } from '../empty.directive';
-import { LoadingDirective } from '../loading.directive';
-import { TargetDirective } from '../target.directive';
+import { SuspenseModule } from '../..';
 
 import { LoadingState, SuspenseComponent } from './suspense.component';
 
@@ -32,7 +30,7 @@ class TestSuspenseDetailComponent {
 @Component({
   template: `
     <susp [state]="state$$ | async" [debug]="'master'" #suspenseComponent>
-      <susp-detail #detailComponent></susp-detail>
+      <susp-detail suspSuccess #detailComponent></susp-detail>
       <ng-template suspLoading>loading master/detail...</ng-template>
       <ng-template suspEmpty>empty loading master/detail...</ng-template>
     </susp>
@@ -58,14 +56,8 @@ describe('SuspenseComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        TestSuspenseMasterComponent,
-        TestSuspenseDetailComponent,
-        SuspenseComponent,
-        TargetDirective,
-        LoadingDirective,
-        EmptyDirective,
-      ],
+      declarations: [TestSuspenseMasterComponent, TestSuspenseDetailComponent],
+      imports: [SuspenseModule.forRoot()],
       providers: [TestService],
     }).compileComponents();
   });

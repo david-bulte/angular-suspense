@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { Movie } from '../movie.service';
+import { Movie } from '../movie.model';
 
 @Component({
   selector: 'app-movie-card',

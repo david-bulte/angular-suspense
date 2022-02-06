@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, switchMap } from 'rxjs';
+import { MovieRepository } from '../movie.repository';
 import { MovieService } from '../movie.service';
 
 @Component({
@@ -11,16 +12,14 @@ import { MovieService } from '../movie.service';
 })
 export class MoviesComponent implements OnInit {
   genres$ = this.movieService.genres$;
-  displayedColumns = ['name', 'director'];
-
-  loadingState$ = this.movieService.loadingState$;
-  movies$ = this.movieService.movies$;
-  activeMovieId$ = this.movieService.activeMovieId$;
-
+  movies$ = this.movieRepo.movies$;
+  loadingState$ = this.movieRepo.loadingState$;
+  activeMovieId$ = this.movieRepo.activeMovieId$;
   genre$$ = new BehaviorSubject<string | null>(null);
 
   constructor(
     private movieService: MovieService,
+    private movieRepo: MovieRepository,
     private router: Router,
     private route: ActivatedRoute
   ) {}
