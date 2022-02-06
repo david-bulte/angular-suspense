@@ -16,7 +16,7 @@ import { LoadingStatesComponent } from './loading-states.component';
     DemoFeatureMoviesModule,
     RouterModule.forRoot(routes),
     environment.production ? [] : AkitaNgDevtools.forRoot(),
-    SuspenseModule,
+    SuspenseModule.forRoot({ debugLoadingStatesInTemplate: true }),
     BrowserAnimationsModule,
   ],
   bootstrap: [AppComponent],

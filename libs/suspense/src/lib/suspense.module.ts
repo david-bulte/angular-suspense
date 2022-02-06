@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ExtraOptions, Routes } from '@angular/router';
 import { EmptyDirective } from './empty.directive';
 import { ErrorDirective } from './error.directive';
 import { LoadingDirective } from './loading.directive';
 import { SuccessDirective } from './success.directive';
+import { SuspenseService } from './suspense.service';
 import { SuspenseComponent } from './suspense/suspense.component';
 import { TargetDirective } from './target.directive';
 import { DefaultTemplatesComponent } from './default-templates/default-templates.component';
@@ -28,4 +30,19 @@ import { DefaultTemplatesComponent } from './default-templates/default-templates
     DefaultTemplatesComponent,
   ],
 })
-export class SuspenseModule {}
+export class SuspenseModule {
+  static forRoot(
+    config?: SuspenseOptions
+  ): ModuleWithProviders<SuspenseModule> {
+    const suspenseService = new SuspenseService(config);
+    return {
+      ngModule: SuspenseModule,
+      providers: [{ provide: SuspenseService, useValue: suspenseService }],
+    };
+  }
+}
+
+export interface SuspenseOptions {
+  timeout?: number;
+  debugLoadingStatesInTemplate?: boolean;
+}

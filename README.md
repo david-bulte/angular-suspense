@@ -42,9 +42,31 @@ its own LoadingState changes.
 - When a component's LoadingState is ERROR, or one of its child components' LoadingStates
 is either EMPTY or ERROR, an error state is shown
 
-## Show me the code
+## Getting started
 
-Wrap your component with the susp tag and provide a loading state.
+In your root module (typically AppModule) you import SuspenseModule like so:
+
+```typescript
+    @NgModule({
+      imports: [
+        SuspenseModule.forRoot()
+      ]
+    })
+```
+
+Feature modules import SuspenseModule without forRoot():
+
+```typescript
+    @NgModule({
+      imports: [
+        SuspenseModule
+      ]
+    })
+```
+
+In your components, areas that are loaded asynchronously are wrapped by 
+a SuspenseComponent (tag _susp_). Each SuspenseComponent is given a loading state via its
+[state] input attribute.
 
 ```angular2html
 
@@ -116,8 +138,18 @@ you can set an error boundary with the catchError attribute:
 ## Timeout
 
 Sometimes you want to wait a couple of microseconds before showing the loading state. In that
-case one can set the _timeout_ attribute of the SuspenseService. You can also set it case by 
-case by setting the SuspenseComponent's [timeout] input property.
+case one can set the global _timeout_ attribute of via SuspenseModule.forRoot(). 
+
+```typescript
+    SuspenseModule.forRoot({ timeout: 300 })
+```
+
+You can also set a timeout case by case by setting the SuspenseComponent's [timeout] input 
+property.
+
+```angular2html
+  <susp [state]="state$ | async" [timout]="300"></susp>
+```
 
 ## Customizing the loading, error and empty states
 

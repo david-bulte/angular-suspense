@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SuspenseService } from '@david-bulte/angular-suspense';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,4 @@ import { SuspenseService } from '@david-bulte/angular-suspense';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor(private suspenseService: SuspenseService) {
-    this.suspenseService.debugLoadingStatesInTemplate = true;
-  }
 }
