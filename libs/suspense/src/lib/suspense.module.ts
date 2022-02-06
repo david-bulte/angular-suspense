@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ModuleWithProviders, NgModule } from '@angular/core';
-import { ExtraOptions, Routes } from '@angular/router';
+import { DefaultTemplatesComponent } from './default-templates/default-templates.component';
 import { EmptyDirective } from './empty.directive';
 import { ErrorDirective } from './error.directive';
 import { LoadingDirective } from './loading.directive';
@@ -8,7 +8,6 @@ import { SuccessDirective } from './success.directive';
 import { SuspenseService } from './suspense.service';
 import { SuspenseComponent } from './suspense/suspense.component';
 import { TargetDirective } from './target.directive';
-import { DefaultTemplatesComponent } from './default-templates/default-templates.component';
 
 @NgModule({
   imports: [CommonModule],

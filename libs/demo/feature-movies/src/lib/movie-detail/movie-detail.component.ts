@@ -8,7 +8,9 @@ import {
   Observable,
   take,
 } from 'rxjs';
-import { Actor, MovieService } from '../movie.service';
+import { Actor } from '../movie.model';
+import { MovieRepository } from '../movie.repository';
+import { MovieService } from '../movie.service';
 
 @Component({
   selector: 'app-movie-detail',
@@ -17,9 +19,9 @@ import { Actor, MovieService } from '../movie.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MovieDetailComponent implements OnInit {
-  loadingStateMovie$ = this.movieService.loadingStateMovie$;
-  movie$ = this.movieService.movie$;
-  actors$ = this.movieService.actors$;
+  movie$ = this.movieRepo.movie$;
+  actors$ = this.movieRepo.actors$;
+  loadingStateMovie$ = this.movieRepo.loadingStateMovie$;
   actor$$ = new BehaviorSubject<Actor | null>(null);
   loadingStateActor$$ = new BehaviorSubject(LoadingState.LOADING);
 
@@ -27,6 +29,7 @@ export class MovieDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private movieRepo: MovieRepository,
     private movieService: MovieService
   ) {}
 
@@ -51,7 +54,6 @@ export class MovieDetailComponent implements OnInit {
     this.loadingStateActor$$.next(LoadingState.LOADING);
     this.movieService.loadActor(id).subscribe(
       (actor) => {
-        console.log('actor', actor);
         this.loadingStateActor$$.next(
           actor?.summary ? LoadingState.SUCCESS : LoadingState.EMPTY
         );

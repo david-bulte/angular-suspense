@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of, throwError } from 'rxjs';
 import { delay, map } from 'rxjs/operators';
-import { Actor, Movie } from './movie.service';
+import { Actor, Movie } from './movie.model';
 
 @Injectable({ providedIn: 'root' })
 export class MovieApi {
@@ -18,6 +18,7 @@ export class MovieApi {
     const movie = movies.find((movie) => movie.name === name);
 
     if (movie?.name === 'The Piano') {
+      // return throwError('not found');
       return of({ ...movie, actors: actors[name] || [] }).pipe(delay(2000));
     } else if (!movie) {
       return throwError('not found');

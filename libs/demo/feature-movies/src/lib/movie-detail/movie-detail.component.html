@@ -5,6 +5,7 @@
   *ngIf="name$ | async; else pleaseSelect"
 >
   <app-movie-card
+    suspSuccess
     *ngIf="movie$ | async as movie"
     [movie]="movie"
     (selectActor)="onSelectActor($event)"
@@ -14,7 +15,7 @@
       [state]="loadingStateActor$$ | async"
       [stopPropagation]="false"
     >
-      <div>
+      <div suspSuccess>
         {{ (actor$$ | async)?.summary }}
       </div>
 

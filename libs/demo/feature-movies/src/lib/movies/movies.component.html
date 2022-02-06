@@ -1,7 +1,7 @@
 <susp [debug]="'all'" class="h-full">
 
+  <!--  todo support ng-container or without directive-->
   <div suspSuccess class="h-full">
-
     <div class="h-full flex justify-items-stretch flex-col lg:flex-row">
       <div class="w-full lg:w-96">
         <div class="bg-gray-50 p-4 lg:fixed lg:h-full">
@@ -57,49 +57,3 @@
     </div>
   </div>
 </susp>
-
-
-<!--<div>-->
-<!--  <button-->
-<!--    class="tag"-->
-<!--    type="button"-->
-<!--    (click)="onSelectGenre(genre)"-->
-<!--    *ngFor="let genre of genres$ | async"-->
-<!--  >-->
-<!--    {{ genre }}-->
-<!--  </button>-->
-
-<!--  <app-suspense [loadingState]="loadingState$ | async" [debug]="'movies'">-->
-<!--    <div appSuccess>-->
-
-<!--      <table>-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--          <th>-->
-<!--            <div class="font-semibold text-left">Movie</div>-->
-<!--          </th>-->
-<!--          <th>-->
-<!--            <div class="font-semibold text-left">Genre</div>-->
-<!--          </th>-->
-<!--          <th>-->
-<!--            <div class="font-semibold text-left">Year</div>-->
-<!--          </th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr class="hover:bg-blue-200 hover:text-white hover:cursor-pointer" (click)="showDetails(movie.name)" *ngFor="let movie of movies$ | async">-->
-<!--          <td><div class="text-left">{{movie.name}}</div></td>-->
-<!--          <td><div class="text-left">{{movie.genre}}</div></td>-->
-<!--          <td><div class="text-left">{{movie.year}}</div></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--      </table>-->
-
-<!--      <div>-->
-<!--        <router-outlet></router-outlet>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--&lt;!&ndash;    <ng-template appEmpty>empty</ng-template>&ndash;&gt;-->
-<!--&lt;!&ndash;    <ng-template appError>error (let-error)</ng-template>&ndash;&gt;-->
-<!--  </app-suspense>-->
-<!--</div>-->

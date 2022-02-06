@@ -1,116 +1,61 @@
 import { Injectable } from '@angular/core';
-import { applyTransaction } from '@datorama/akita';
-import { LoadingState } from '@david-bulte/angular-suspense';
-import { combineLatest, EMPTY, throwError } from 'rxjs';
-import { catchError, map, startWith, tap } from 'rxjs/operators';
+import { EMPTY, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { MovieApi } from './movie.api';
-import { MovieQuery, MovieStore } from './movie.repo';
+import { MovieRepository, trackMoviesRequestsStatus } from './movie.repository';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MovieService {
-  movies$ = this.movieQuery.selectAll();
-  activeMovieId$ = this.movieQuery.selectActiveId();
   genres$ = this.movieApi.listGenres();
 
-  loadingState$ = combineLatest([
-    this.movieQuery.selectLoading(),
-    this.movieQuery.selectError(),
-    this.movieQuery.selectCount(),
-  ]).pipe(
-    map(([loading, error, count]) => {
-      return loading
-        ? LoadingState.LOADING
-        : error
-        ? LoadingState.ERROR
-        : count > 0
-        ? LoadingState.SUCCESS
-        : LoadingState.EMPTY;
-    }),
-    startWith(LoadingState.LOADING)
-  );
-
-  actors$ = this.movieQuery.actors$;
-  movie$ = this.movieQuery.movie$;
-  loadingStateMovie$ = this.movieQuery.loadingStateMovie$;
-
-  constructor(
-    private movieApi: MovieApi,
-    private movieStore: MovieStore,
-    private movieQuery: MovieQuery
-  ) {}
+  constructor(private movieApi: MovieApi, private movieRepo: MovieRepository) {}
 
   setActiveMovie(name: string | null): void {
-    this.movieStore.setActive(name);
+    this.movieRepo.setActive(name);
     if (name) {
       this.loadMovie(name).subscribe();
     }
   }
 
   loadAll(genre: string | null) {
-    this.movieStore.setLoading(true);
     return this.movieApi.listMovies(genre).pipe(
-      tap((movies) => {
-        applyTransaction(() => {
-          // this.movieStore.upsertMany(movies);
-          this.movieStore.set(movies);
-          this.movieStore.setLoading(false);
-        });
-      }),
-      catchError((err) => {
-        this.movieStore.setError(err);
-        return throwError(err);
-      })
+      tap((movies) => this.movieRepo.setMovies(movies)),
+      trackMoviesRequestsStatus('movies')
     );
   }
 
   loadMovie(name: string) {
     // if is loaded
-    if (this.getMovie(name)?.actors !== undefined) {
+    if (this.movieRepo.getMovie(name)?.actors !== undefined) {
+      this.movieRepo.setLoadingDetails({
+        detailsLoading: false,
+        detailsError: null,
+      });
       return EMPTY;
     }
 
-    this.movieStore.update({
+    this.movieRepo.setLoadingDetails({
       detailsLoading: true,
       detailsError: null,
     });
 
     return this.movieApi.getMovie(name).pipe(
       tap((movie) => {
-        applyTransaction(() => {
-          this.movieStore.upsert(name, movie);
-          this.movieStore.update({ detailsLoading: false });
-        });
+        this.movieRepo.upsertMovie(name, movie);
       }),
       catchError((err) => {
-        this.movieStore.update({ detailsLoading: false, detailsError: err });
+        this.movieRepo.setLoadingDetails({
+          detailsLoading: false,
+          detailsError: err,
+        });
         return throwError(err);
       })
     );
   }
 
-  getMovie(name: string) {
-    return this.movieQuery.getEntity(name);
-  }
-
   loadActor(id: number) {
     return this.movieApi.getActor(id);
   }
-}
-
-export interface Movie {
-  name: string;
-  director: Actor;
-  genre: string;
-  synopsis: string;
-  year: number;
-  actors?: Actor[];
-}
-
-export interface Actor {
-  id: number;
-  lastName: string;
-  firstName: string;
-  summary?: string;
 }
