@@ -30,7 +30,7 @@ class TestSuspenseDetailComponent {
 @Component({
   template: `
     <susp [state]="state$$ | async" [debug]="'master'" #suspenseComponent>
-      <susp-detail suspSuccess #detailComponent></susp-detail>
+      <susp-detail #detailComponent></susp-detail>
       <ng-template suspLoading>loading master/detail...</ng-template>
       <ng-template suspEmpty>empty loading master/detail...</ng-template>
     </susp>

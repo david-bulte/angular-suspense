@@ -1,10 +1,10 @@
 <div
   *ngIf="debugLoadingStatesInTemplate"
-  class="absolute bg-orange-500 rounded opacity-70"
+  class="__suspense__ absolute bg-orange-500 rounded opacity-70"
 >
   {{ debug }} : {{ state | json }}
 </div>
-<ng-container class="target" suspTarget></ng-container>
+<ng-container class="__suspense__target__" suspTarget></ng-container>
 <ng-content></ng-content>
 
 <ng-template suspLoading> LOADING {{ debug }} </ng-template>

@@ -174,18 +174,18 @@ export class LoadingStatesComponent {}
 
 ### Per case
 
-Provide ng-templates with suspLoading, suspSuccess, suspEmpty and suspError directives
+Provide ng-templates with suspLoading, suspEmpty and suspError directives
 
 ```angular2html
 
 <susp [state]="loadingMoviesState$ | async">
-  <ng-template suspLoading>
-    <div class="loading">loading...</div>
-  </ng-template>
-  <div suspSuccess>
+  <div>
     <app-movie [movie]="movie$ | async"></app-movie>
     <router-outlet></router-outlet>
   </div>
+  <ng-template suspLoading>
+    <div class="loading">loading...</div>
+  </ng-template>
   <ng-template suspEmpty>NOTHING HERE</ng-template>
   <ng-template suspError>OOPS</ng-template>
 </susp>

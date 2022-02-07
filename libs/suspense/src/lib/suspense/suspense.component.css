@@ -1,3 +1,7 @@
-.target {
+.__suspense__target__ {
   position: absolute;
+}
+
+.__suspense--hide-all__ > *:not(.__suspense__) {
+  display: none;
 }
