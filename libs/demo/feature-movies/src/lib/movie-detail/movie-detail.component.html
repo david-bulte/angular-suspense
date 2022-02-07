@@ -5,7 +5,6 @@
   *ngIf="name$ | async; else pleaseSelect"
 >
   <app-movie-card
-    suspSuccess
     *ngIf="movie$ | async as movie"
     [movie]="movie"
     (selectActor)="onSelectActor($event)"
@@ -14,13 +13,22 @@
       [debug]="'actor'"
       [state]="loadingStateActor$$ | async"
       [stopPropagation]="false"
+      [context]="actor$$ | async"
     >
-      <div suspSuccess>
+      <div>
         {{ (actor$$ | async)?.summary }}
       </div>
 
-      <ng-template suspEmpty>
-        <div *ngIf="actor$$ | async as actor">Nothing found about {{ actor.firstName }}</div>
+      <ng-template suspEmpty let-actor>
+        <div>
+          THIS IS EMPTY<br />THIS IS EMPTY<br />THIS IS EMPTY<br />THIS IS
+          EMPTY<br />THIS IS EMPTY<br />
+        </div>
+
+        <!-- todo this does not receice class __suspense__ class so it will not show, use the context to
+        pass the actor in stead, something for the cookbook-->
+        <!-- <div class="__suspense__" *ngIf="actor$$ | async as actor">Nothing found about {{ actor.firstName }}</div>-->
+        <div>Nothing found about {{ actor.firstName }}</div>
       </ng-template>
     </susp>
   </app-movie-card>

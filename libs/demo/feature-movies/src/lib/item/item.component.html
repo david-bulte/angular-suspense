@@ -7,7 +7,7 @@
   <ng-template suspLoading>
     <div class="loading">loading...</div>
   </ng-template>
-  <div suspSuccess>
+  <div>
     <h1>{{ data.debug }}</h1>
     <div *ngFor="let link of data.links">
       <a routerLink="{{ link }}">{{ link }}</a>

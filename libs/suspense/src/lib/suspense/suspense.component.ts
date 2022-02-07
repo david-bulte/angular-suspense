@@ -2,7 +2,6 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  ContentChild,
   ContentChildren,
   ElementRef,
   EmbeddedViewRef,
@@ -17,6 +16,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -37,7 +37,6 @@ import {
 import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
 import { LoadingDirective } from '../loading.directive';
-import { SuccessDirective } from '../success.directive';
 import { SuspenseService } from '../suspense.service';
 import { TargetDirective } from '../target.directive';
 
@@ -46,6 +45,7 @@ import { TargetDirective } from '../target.directive';
   selector: 'susp',
   templateUrl: './suspense.component.html',
   styleUrls: ['./suspense.component.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuspenseComponent
@@ -56,8 +56,8 @@ export class SuspenseComponent
   @Input() timeout!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
+  @Input() context: any;
 
-  @ContentChild(SuccessDirective) successDirective!: SuccessDirective;
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
   @ContentChildren(LoadingDirective, { read: TemplateRef, descendants: false })
@@ -103,13 +103,6 @@ export class SuspenseComponent
   }
 
   ngAfterContentInit(): void {
-    if (!this.successDirective) {
-      this.renderer.setAttribute(
-        this.elRef.nativeElement,
-        'visibility',
-        'hidden'
-      );
-    }
     this.setupLoadingStateListener();
   }
 
@@ -181,14 +174,24 @@ export class SuspenseComponent
     combinedLoadingState$.subscribe((loadingState) => {
       console.log('item', this.debug, 'combined states 2', loadingState);
 
-      this.successDirective?.hide();
+      this.renderer.addClass(
+        this.elRef.nativeElement,
+        '__suspense--hide-all__'
+      );
+
       this.container.vcr.clear();
 
       switch (loadingState) {
         case LoadingState.EMPTY:
           this.loadingRef = this.container.vcr.createEmbeddedView(
-            this.getEmptyDirective()
+            this.getEmptyDirective(),
+            { $implicit: this.context }
           );
+          console.log('this.loadingRef', this.loadingRef);
+          this.loadingRef.rootNodes.forEach((rootNode) => {
+            console.log('rootNode', rootNode);
+            this.renderer.addClass(rootNode, '__suspense__');
+          });
           console.log(
             'item',
             this.debug,
@@ -203,8 +206,13 @@ export class SuspenseComponent
           break;
         case LoadingState.ERROR:
           this.loadingRef = this.container.vcr.createEmbeddedView(
-            this.getErrorDirective()
+            this.getErrorDirective(),
+            { $implicit: this.context }
           );
+          // todo skip comments
+          this.loadingRef.rootNodes.forEach((rootNode) => {
+            this.renderer.addClass(rootNode, '__suspense__');
+          });
           console.log(
             'item',
             this.debug,
@@ -225,22 +233,21 @@ export class SuspenseComponent
             LoadingState.LOADING
           );
           this.loadingRef = this.container.vcr.createEmbeddedView(
-            this.getLoadingDirective()
+            this.getLoadingDirective(),
+            { $implicit: this.context }
           );
+          this.loadingRef.rootNodes.forEach((rootNode) => {
+            this.renderer.addClass(rootNode, '__suspense__');
+          });
           if (this.stopPropagation) {
             this.publicLoadingState$$.next(LoadingState.SUCCESS);
           }
           break;
         case LoadingState.SUCCESS:
-          if (!this.successDirective) {
-            this.renderer.setAttribute(
-              this.elRef.nativeElement,
-              'visibility',
-              'visible'
-            );
-          } else {
-            this.successDirective?.show();
-          }
+          this.renderer.removeClass(
+            this.elRef.nativeElement,
+            '__suspense--hide-all__'
+          );
           console.log(
             'item',
             this.debug,
