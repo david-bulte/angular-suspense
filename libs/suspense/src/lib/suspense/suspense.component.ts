@@ -37,8 +37,11 @@ import {
 import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
 import { LoadingDirective } from '../loading.directive';
+import { logger } from '../log-utils';
 import { SuspenseService } from '../suspense.service';
 import { TargetDirective } from '../target.directive';
+
+logger.enableOnly = true;
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -56,7 +59,6 @@ export class SuspenseComponent
   @Input() timeout!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
-  @Input() context: any;
 
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
@@ -111,7 +113,7 @@ export class SuspenseComponent
   }
 
   private registerChild(child: SuspenseComponent) {
-    console.log('item', this.debug, 'registerChild', child.debug);
+    logger.log('item', this.debug, 'registerChild', child.debug);
     this.children = [...this.children, child];
   }
 
@@ -122,7 +124,7 @@ export class SuspenseComponent
   }
 
   private setupLoadingStateListener() {
-    console.log(
+    logger.log(
       'item',
       this.debug,
       'setupLoadingStateListener children',
@@ -172,7 +174,7 @@ export class SuspenseComponent
           );
 
     combinedLoadingState$.subscribe((loadingState) => {
-      console.log('item', this.debug, 'combined states 2', loadingState);
+      logger.log('item', this.debug, 'combined states 2', loadingState);
 
       this.renderer.addClass(
         this.elRef.nativeElement,
@@ -185,14 +187,14 @@ export class SuspenseComponent
         case LoadingState.EMPTY:
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getEmptyDirective(),
-            { $implicit: this.context }
+            { $implicit: undefined }
           );
-          console.log('this.loadingRef', this.loadingRef);
+          logger.log('this.loadingRef', this.loadingRef);
           this.loadingRef.rootNodes.forEach((rootNode) => {
-            console.log('rootNode', rootNode);
+            logger.log('rootNode', rootNode);
             this.renderer.addClass(rootNode, '__suspense__');
           });
-          console.log(
+          logger.log(
             'item',
             this.debug,
             'publicLoadingState$$.next',
@@ -207,13 +209,13 @@ export class SuspenseComponent
         case LoadingState.ERROR:
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getErrorDirective(),
-            { $implicit: this.context }
+            { $implicit: undefined }
           );
           // todo skip comments
           this.loadingRef.rootNodes.forEach((rootNode) => {
             this.renderer.addClass(rootNode, '__suspense__');
           });
-          console.log(
+          logger.log(
             'item',
             this.debug,
             'publicLoadingState$$.next',
@@ -226,7 +228,7 @@ export class SuspenseComponent
           );
           break;
         case LoadingState.LOADING:
-          console.log(
+          logger.only(
             'item',
             this.debug,
             'publicLoadingState$$.next',
@@ -234,7 +236,7 @@ export class SuspenseComponent
           );
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getLoadingDirective(),
-            { $implicit: this.context }
+            { $implicit: undefined }
           );
           this.loadingRef.rootNodes.forEach((rootNode) => {
             this.renderer.addClass(rootNode, '__suspense__');
@@ -248,7 +250,7 @@ export class SuspenseComponent
             this.elRef.nativeElement,
             '__suspense--hide-all__'
           );
-          console.log(
+          logger.log(
             'item',
             this.debug,
             'publicLoadingState$$.next',
@@ -285,7 +287,7 @@ export class SuspenseComponent
     localLoadingState,
     childrenLoadingState,
   ]: LoadingState[]) {
-    console.log(
+    logger.log(
       'item',
       this.debug,
       'combined states 1',

@@ -13,7 +13,6 @@
       [debug]="'actor'"
       [state]="loadingStateActor$$ | async"
       [stopPropagation]="false"
-      [context]="actor$$ | async"
     >
       <div>
         {{ (actor$$ | async)?.summary }}
@@ -29,6 +28,10 @@
         pass the actor in stead, something for the cookbook-->
         <!-- <div class="__suspense__" *ngIf="actor$$ | async as actor">Nothing found about {{ actor.firstName }}</div>-->
         <div>Nothing found about {{ actor.firstName }}</div>
+      </ng-template>
+
+      <ng-template suspLoading>
+        <app-feedback #feedbackComponent></app-feedback>
       </ng-template>
     </susp>
   </app-movie-card>

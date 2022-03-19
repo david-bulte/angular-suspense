@@ -196,12 +196,12 @@ Provide ng-templates with suspLoading, suspEmpty and suspError directives
 - better documentation
 - ~~think of better prefix~~
 - logo :)
-- better examples
 - ~~set up demo app~~
 - ~~set up github actions~~
 - ~~unit tests~~
 - ~~introduce timeouts~~
-- intermediate loading state template
+- ~~intermediate loading state template~~
+- setup cookbook, better examples
 - introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
 

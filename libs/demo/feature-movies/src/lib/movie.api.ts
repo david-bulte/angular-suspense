@@ -35,7 +35,7 @@ export class MovieApi {
       });
     });
     const actor = _actors.find((actor) => actor.id === id);
-    return actor ? of(actor).pipe(delay(1000)) : EMPTY;
+    return actor ? of(actor).pipe(delay(3000)) : EMPTY;
   }
 
   listGenres() {

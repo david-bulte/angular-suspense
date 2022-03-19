@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LoadingState } from '@david-bulte/angular-suspense';
 import {
@@ -8,6 +13,7 @@ import {
   Observable,
   take,
 } from 'rxjs';
+import { FeedbackComponent } from '../feedback/feedback.component';
 import { Actor } from '../movie.model';
 import { MovieRepository } from '../movie.repository';
 import { MovieService } from '../movie.service';
@@ -23,7 +29,10 @@ export class MovieDetailComponent implements OnInit {
   actors$ = this.movieRepo.actors$;
   loadingStateMovie$ = this.movieRepo.loadingStateMovie$;
   actor$$ = new BehaviorSubject<Actor | null>(null);
-  loadingStateActor$$ = new BehaviorSubject(LoadingState.LOADING);
+  loadingStateActor$$ = new BehaviorSubject<LoadingState | null>(
+    LoadingState.LOADING
+  );
+  @ViewChild('feedbackComponent') feedbackComponent?: FeedbackComponent;
 
   name$!: Observable<string>;
 
@@ -51,6 +60,8 @@ export class MovieDetailComponent implements OnInit {
 
   onSelectActor(id: number) {
     this.actor$$.next(null);
+    this.feedbackComponent?.reset();
+    this.loadingStateActor$$.next(null);
     this.loadingStateActor$$.next(LoadingState.LOADING);
     this.movieService.loadActor(id).subscribe(
       (actor) => {
