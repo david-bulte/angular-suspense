@@ -1,35 +1,42 @@
-import { Component, Input } from '@angular/core';
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 import { SuspenseModule } from '../suspense.module';
 import { LoadingState, SuspenseComponent } from './suspense.component';
 
-@Component({
-  template: `
-    <susp [debug]="debug" [state]="loadingState"> is dit zichtbaar? </susp>
-  `,
-})
-class TestComponent {
-  @Input() debug = 'test';
-  @Input() loadingState = LoadingState.LOADING;
-}
-
 export default {
   title: 'SuspenseComponent',
-  component: TestComponent,
+  component: SuspenseComponent,
   decorators: [
     moduleMetadata({
-      imports: [SuspenseModule.forRoot({ debugLoadingStatesInTemplate: true })],
+      imports: [
+        SuspenseModule.forRoot({ debugLoadingStatesInTemplate: false }),
+      ],
     }),
   ],
-} as Meta<SuspenseComponent>;
+  argTypes: {
+    state: {
+      options: [
+        LoadingState.LOADING,
+        LoadingState.SUCCESS,
+        LoadingState.ERROR,
+        LoadingState.EMPTY,
+      ],
+      control: { type: 'radio' },
+    },
+  },
+} as Meta;
 
-const Template: Story<SuspenseComponent> = (args: SuspenseComponent) => ({
+const DefaultStory: Story = (args) => ({
   props: args,
+  template: `
+    <susp [debug]="debug" [state]="state" [timeout]="timeout"> 
+      <span>is this thing on?</span>
+    </susp>
+    `,
 });
 
-export const Primary = Template.bind({});
-Primary.args = {
-  debug: '',
+export const Default = DefaultStory.bind({});
+Default.args = {
+  debug: 'debugName',
   state: LoadingState.LOADING,
   timeout: 0,
   catchError: false,

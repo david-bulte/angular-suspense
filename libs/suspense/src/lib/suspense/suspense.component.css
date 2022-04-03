@@ -5,3 +5,10 @@
 .__suspense--hide-all__ > *:not(.__suspense__) {
   display: none;
 }
+
+.__suspense__debug__ {
+  position: absolute;
+  background-color: orange;
+  border-radius: 5%;
+  opacity: 0.5;
+}

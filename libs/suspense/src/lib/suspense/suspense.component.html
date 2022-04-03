@@ -1,10 +1,12 @@
 <div
   *ngIf="debugLoadingStatesInTemplate"
-  class="__suspense__ absolute bg-orange-500 rounded opacity-70"
+  class="__suspense__ __suspense__debug__"
 >
   {{ debug }} : {{ state | json }}
 </div>
 <ng-container class="__suspense__target__" suspTarget></ng-container>
 <ng-content></ng-content>
 
-<ng-template suspLoading> LOADING {{ debug }} </ng-template>
+<ng-template suspLoading> LOADING... </ng-template>
+<ng-template suspError> error - check docs for custom message </ng-template>
+<ng-template suspEmpty> empty - check docs for custom message </ng-template>
