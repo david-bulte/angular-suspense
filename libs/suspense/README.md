@@ -1,7 +1,3 @@
-# suspense
+# AngularSuspense
 
-This library was generated with [Nx](https://nx.dev).
-
-## Running unit tests
-
-Run `nx test suspense` to execute the unit tests.
+Anothe suspense library :) Check the docs here: https://github.com/david-bulte/angular-suspense

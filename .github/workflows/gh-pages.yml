@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,6 +26,10 @@ jobs:
       - name: Build
         run: npm run build:prod
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Copy index.html -> 404.html
         uses: canastro/copy-file-action@master
         with:
