@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/suspense"],
       "options": {
-        "jestConfig": "libs/suspense/jest.config.js",
+        "jestConfig": "libs/suspense/jest.config.ts",
         "passWithNoTests": true,
         "codeCoverage": true
       }

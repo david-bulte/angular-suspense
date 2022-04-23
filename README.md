@@ -1,22 +1,19 @@
 # AngularSuspense
 
-Work in progress folks. Stay tuned.
-
-## Intro
-
 Showing content as soon as it arrives can be a nice thing to pursue. However, 
 when this results in a page full of spinners, skeleton loaders and what not, the 
 user experience becomes less joyful. Somewhere there exists a balance between 
 fast load times and jankless web pages, and with AngularSuspense, developers don't 
 have to compromise between the two.
 
-The project was inspired by [react suspense](https://reactjs.org/docs/concurrent-mode-suspense.html),
-[react's error boundary](https://reactjs.org/docs/error-boundaries.html) and
-[remix](https://remix.run/).
+![img-1](assets/img/suspense-intro.png)
+
+This project was inspired by [react suspense](https://reactjs.org/docs/concurrent-mode-suspense.html) and
+[react's error boundary](https://reactjs.org/docs/error-boundaries.html).
 
 ## Demo
 
-![img-1](assets/img/suspense.gif)
+![img-2](assets/img/suspense.gif)
 
 
 ## How it works
@@ -202,7 +199,6 @@ Provide ng-templates with suspLoading, suspEmpty and suspError directives
 - ~~introduce timeouts~~
 - ~~intermediate loading state template~~
 - setup cookbook, better examples
-- introduce SuspensePipes, e.g. to work with ng-select
 - publish to npm
 
 ## Lessons learned
