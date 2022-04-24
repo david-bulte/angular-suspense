@@ -148,7 +148,7 @@ property.
   <susp [state]="state$ | async" [timout]="300"></susp>
 ```
 
-## Customizing the loading, error and empty states
+## Customizing the loading, error and empty states' look and feel
 
 ### Globally
 
