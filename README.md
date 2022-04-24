@@ -41,6 +41,12 @@ is either EMPTY or ERROR, an error state is shown
 
 ## Getting started
 
+First install the library.
+
+```
+    npm install @david-bulte/angular-suspense --save
+```
+
 In your root module (typically AppModule) you import SuspenseModule like so:
 
 ```typescript
