@@ -1,7 +1,7 @@
 # AngularSuspense
 
-_Work in progress folks ?, almost there ? (famout last words) and getting
-pretty excited ?_
+_Work in progress folks :eyes:, almost there :checkered_flag: (famout last words) and getting
+pretty excited :sunglasses:_
 
 Showing content as soon as it arrives can be a nice thing to pursue. However, 
 when this results in a page full of spinners, skeleton loaders and what not, the 
