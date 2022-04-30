@@ -1,5 +1,8 @@
 # AngularSuspense
 
+_Work in progress folks ?, almost there ? (famout last words) and getting
+pretty excited ?_
+
 Showing content as soon as it arrives can be a nice thing to pursue. However, 
 when this results in a page full of spinners, skeleton loaders and what not, the 
 user experience becomes less joyful. Somewhere there exists a balance between 
