@@ -205,7 +205,9 @@ Provide ng-templates with suspLoading, suspEmpty and suspError directives
 - ~~introduce timeouts~~
 - ~~intermediate loading state template~~
 - setup cookbook, better examples
-- publish to npm
+- catchError map
+- SuspenseDirective
+- ~~publish to npm~~
 
 ## Lessons learned
 

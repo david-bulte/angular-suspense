@@ -32,6 +32,7 @@ import {
   filter,
   map,
   startWith,
+  switchMap,
   takeWhile,
 } from 'rxjs/operators';
 import { EmptyDirective } from '../empty.directive';
@@ -59,6 +60,7 @@ export class SuspenseComponent
   @Input() timeout!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
+  @Input() expectedChildren: number | null = null;
 
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
@@ -76,10 +78,10 @@ export class SuspenseComponent
   @ViewChild(ErrorDirective, { read: TemplateRef, static: true })
   defaultErrorDirective!: TemplateRef<ErrorDirective>;
 
-  children: SuspenseComponent[] = [];
+  private children$$ = new BehaviorSubject<SuspenseComponent[]>([]);
   private loadingRef?: EmbeddedViewRef<LoadingDirective>;
   private localLoadingState$$ = new BehaviorSubject(null);
-  private publicLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
+  public publicLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
 
   constructor(
     private vcr: ViewContainerRef,
@@ -114,13 +116,13 @@ export class SuspenseComponent
 
   private registerChild(child: SuspenseComponent) {
     logger.log('item', this.debug, 'registerChild', child.debug);
-    this.children = [...this.children, child];
+    this.children$$.next([...this.children$$.getValue(), child]);
   }
 
   private removeChild(child: SuspenseComponent) {
-    const children = [...this.children];
+    const children = [...this.children$$.getValue()];
     children.splice(children.indexOf(child), 1);
-    this.children = children;
+    this.children$$.next(children);
   }
 
   private setupLoadingStateListener() {
@@ -128,7 +130,7 @@ export class SuspenseComponent
       'item',
       this.debug,
       'setupLoadingStateListener children',
-      this.children?.length
+      this.children$$?.getValue()?.length
     );
 
     const localLoadingState$: Observable<LoadingState> =
@@ -140,17 +142,26 @@ export class SuspenseComponent
         : of(LoadingState.SUCCESS);
 
     const childrenLoadingState$: Observable<LoadingState> =
-      this.children?.length > 0
-        ? forkJoin(
-            ...this.children.map((child) => {
-              return child.publicLoadingState$$.pipe(
-                takeWhile(
-                  (loadingState) => loadingState === LoadingState.LOADING,
-                  true
-                )
-              );
-            })
-          ).pipe(
+      this.children$$.getValue()?.length === 0 && this.expectedChildren === null
+        ? of(LoadingState.SUCCESS)
+        : this.children$$.pipe(
+            filter((children) => {
+              return this.expectedChildren !== null
+                ? children.length >= this.expectedChildren
+                : true;
+            }),
+            switchMap((children) =>
+              forkJoin(
+                ...children.map((child) => {
+                  return child.publicLoadingState$$.pipe(
+                    takeWhile(
+                      (loadingState) => loadingState === LoadingState.LOADING,
+                      true
+                    )
+                  );
+                })
+              )
+            ),
             map((childLoadingstates) => {
               return childLoadingstates.indexOf(LoadingState.ERROR) > -1
                 ? LoadingState.ERROR
@@ -158,8 +169,7 @@ export class SuspenseComponent
             }),
             startWith(LoadingState.LOADING),
             distinctUntilChanged()
-          )
-        : of(LoadingState.SUCCESS);
+          );
 
     // todo investigate - for some reason tests fail when using debounce
     const combinedLoadingState$ =
@@ -191,8 +201,9 @@ export class SuspenseComponent
           );
           logger.log('this.loadingRef', this.loadingRef);
           this.loadingRef.rootNodes.forEach((rootNode) => {
-            logger.log('rootNode', rootNode);
-            this.renderer.addClass(rootNode, '__suspense__');
+            if (rootNode.nodeType !== Node.TEXT_NODE) {
+              this.renderer.addClass(rootNode, '__suspense__');
+            }
           });
           logger.log(
             'item',
@@ -211,9 +222,10 @@ export class SuspenseComponent
             this.getErrorDirective(),
             { $implicit: undefined }
           );
-          // todo skip comments
           this.loadingRef.rootNodes.forEach((rootNode) => {
-            this.renderer.addClass(rootNode, '__suspense__');
+            if (rootNode.nodeType !== Node.TEXT_NODE) {
+              this.renderer.addClass(rootNode, '__suspense__');
+            }
           });
           logger.log(
             'item',
@@ -239,8 +251,14 @@ export class SuspenseComponent
             { $implicit: undefined }
           );
           this.loadingRef.rootNodes.forEach((rootNode) => {
-            this.renderer.addClass(rootNode, '__suspense__');
+            if (rootNode.nodeType !== Node.TEXT_NODE) {
+              this.renderer.addClass(rootNode, '__suspense__');
+            }
           });
+          this.renderer.addClass(
+            this.elRef.nativeElement,
+            '__suspense--loading__'
+          );
           if (this.stopPropagation) {
             this.publicLoadingState$$.next(LoadingState.SUCCESS);
           }
@@ -261,6 +279,8 @@ export class SuspenseComponent
         default:
         // all hidden
       }
+
+      this.setStateClass(loadingState);
     });
   }
 
@@ -317,6 +337,23 @@ export class SuspenseComponent
 
   private getTimeout(status: LoadingState) {
     return status === LoadingState.LOADING ? this.timeout : 0;
+  }
+
+  private setStateClass(loadingState: LoadingState) {
+    this.renderer.removeClass(this.elRef.nativeElement, '__suspense--error__');
+    this.renderer.removeClass(
+      this.elRef.nativeElement,
+      '__suspense--loading__'
+    );
+    this.renderer.removeClass(this.elRef.nativeElement, '__suspense--empty__');
+    this.renderer.removeClass(
+      this.elRef.nativeElement,
+      '__suspense--success__'
+    );
+    this.renderer.addClass(
+      this.elRef.nativeElement,
+      `__suspense--${loadingState}__`.toLowerCase()
+    );
   }
 }
 

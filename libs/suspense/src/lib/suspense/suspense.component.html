@@ -1,8 +1,5 @@
-<div
-  *ngIf="debugLoadingStatesInTemplate"
-  class="__suspense__ __suspense__debug__"
->
-  {{ debug }} : {{ state | json }}
+<div *ngIf="debugLoadingStatesInTemplate" class="__suspense__ __suspense__debug__">
+  {{ debug }} : localState = {{ state | json }} : publicState = {{ publicLoadingState$$ | async }}
 </div>
 <ng-container class="__suspense__target__" suspTarget></ng-container>
 <ng-content></ng-content>
