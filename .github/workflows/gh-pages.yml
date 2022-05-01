@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,11 +32,6 @@ jobs:
           source: "dist/apps/demo/index.html"
           target: "dist/apps/demo/404.html"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-
       - name: Deploy
         if: success()
         uses: peaceiris/actions-gh-pages@v3
@@ -44,4 +39,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist/apps/demo
           enable_jekyll: true
-
