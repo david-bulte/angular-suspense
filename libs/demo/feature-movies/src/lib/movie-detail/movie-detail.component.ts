@@ -29,9 +29,7 @@ export class MovieDetailComponent implements OnInit {
   actors$ = this.movieRepo.actors$;
   loadingStateMovie$ = this.movieRepo.loadingStateMovie$;
   actor$$ = new BehaviorSubject<Actor | null>(null);
-  loadingStateActor$$ = new BehaviorSubject<LoadingState | null>(
-    LoadingState.LOADING
-  );
+  loadingStateActor$$ = new BehaviorSubject<LoadingState | null>('loading');
   @ViewChild('feedbackComponent') feedbackComponent?: FeedbackComponent;
 
   name$!: Observable<string>;
@@ -54,7 +52,7 @@ export class MovieDetailComponent implements OnInit {
     });
 
     this.actors$.pipe(take(1)).subscribe(() => {
-      this.loadingStateActor$$.next(LoadingState.SUCCESS);
+      this.loadingStateActor$$.next('success');
     });
   }
 
@@ -62,16 +60,14 @@ export class MovieDetailComponent implements OnInit {
     this.actor$$.next(null);
     this.feedbackComponent?.reset();
     this.loadingStateActor$$.next(null);
-    this.loadingStateActor$$.next(LoadingState.LOADING);
+    this.loadingStateActor$$.next('loading');
     this.movieService.loadActor(id).subscribe(
       (actor) => {
-        this.loadingStateActor$$.next(
-          actor?.summary ? LoadingState.SUCCESS : LoadingState.EMPTY
-        );
+        this.loadingStateActor$$.next(actor?.summary ? 'success' : 'empty');
         this.actor$$.next(actor);
       },
       () => {
-        this.loadingStateActor$$.next(LoadingState.ERROR);
+        this.loadingStateActor$$.next('error');
       }
     );
   }

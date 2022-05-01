@@ -55,32 +55,30 @@ export class MovieRepository {
     map((movie): Actor[] => movie.actors || [])
   );
 
-  loadingStateMovie$ = store.pipe(
+  loadingStateMovie$: Observable<LoadingState> = store.pipe(
     select(({ detailsLoading, detailsError }) => {
       if (detailsError) {
-        return LoadingState.ERROR;
+        return 'error';
       }
-      return detailsLoading === false
-        ? LoadingState.SUCCESS
-        : LoadingState.LOADING;
+      return detailsLoading === false ? 'success' : 'loading';
     }),
-    startWith(LoadingState.LOADING)
+    startWith('loading' as const)
   );
 
-  loadingState$ = combineLatest([
+  loadingState$: Observable<LoadingState> = combineLatest([
     store.pipe(selectRequestStatus('movies')),
     store.pipe(selectEntitiesCount()),
   ]).pipe(
     map(([status, count]: [StatusState, number]) => {
       return status.value === 'pending'
-        ? LoadingState.LOADING
+        ? 'loading'
         : status.value === 'error'
-        ? LoadingState.ERROR
+        ? 'error'
         : count > 0
-        ? LoadingState.SUCCESS
-        : LoadingState.EMPTY;
+        ? 'success'
+        : 'empty';
     }),
-    startWith(LoadingState.LOADING)
+    startWith('loading' as const)
   );
 
   setActive(name: string | null) {
