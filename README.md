@@ -1,6 +1,6 @@
 # AngularSuspense
 
-_Work in progress folks :eyes:, almost there :checkered_flag: (famout last words) and getting
+_Work in progress folks :eyes:, almost there :checkered_flag: and getting
 pretty excited :sunglasses:_
 
 Showing content as soon as it arrives can be a nice thing to pursue. However, 
