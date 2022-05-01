@@ -17,7 +17,7 @@ describe('SuspenseService', () => {
     expect(service).toBeTruthy();
   });
 
-  test('default timeout value should be 0', () => {
-    expect(service.timeout).toBe(0);
+  test('default debounce value should be 0', () => {
+    expect(service.debounce).toBe(0);
   });
 });

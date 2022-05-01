@@ -28,7 +28,7 @@ export default {
 const DefaultStory: Story = (args) => ({
   props: args,
   template: `
-    <susp [debug]="debug" [state]="state" [timeout]="timeout"> 
+    <susp [debug]="debug" [state]="state" [debounce]="debounce"> 
       <span>is this thing on?</span>
     </susp>
     `,
@@ -38,7 +38,7 @@ export const Default = DefaultStory.bind({});
 Default.args = {
   debug: 'debugName',
   state: LoadingState.LOADING,
-  timeout: 0,
+  debounce: 0,
   catchError: false,
   stopPropagation: false,
 };

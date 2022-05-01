@@ -15,7 +15,7 @@ export class SuspenseService {
     return this.options?.debugLoadingStatesInTemplate || false;
   }
 
-  get timeout() {
-    return this.options?.timeout || 0;
+  get debounce() {
+    return this.options?.debounce || 0;
   }
 }

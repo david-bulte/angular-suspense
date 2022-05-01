@@ -42,6 +42,6 @@ export class SuspenseModule {
 }
 
 export interface SuspenseOptions {
-  timeout?: number;
+  debounce?: number;
   debugLoadingStatesInTemplate?: boolean;
 }

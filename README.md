@@ -141,20 +141,40 @@ you can set an error boundary with the catchError attribute:
 </susp>
 ```
 
-## Timeout
+## Debounce
 
 Sometimes you want to wait a couple of microseconds before showing the loading state. In that
-case one can set the global _timeout_ attribute of via SuspenseModule.forRoot(). 
+case one can set the global _debounce_ attribute of via SuspenseModule.forRoot(). 
 
 ```typescript
-    SuspenseModule.forRoot({ timeout: 300 })
+    SuspenseModule.forRoot({ debounce: 300 })
 ```
 
-You can also set a timeout case by case by setting the SuspenseComponent's [timeout] input 
+You can also set a timeout case by case by setting the SuspenseComponent's [debounce] input 
 property.
 
 ```angular2html
-  <susp [state]="state$ | async" [timout]="300"></susp>
+  <susp [state]="state$ | async" [debounce]="300"></susp>
+```
+
+## WaitFor
+
+When a SuspenseComponent is conditionally created, its parent component cannot know 
+whether the page has been completely loaded or not. You can give it a hint to show
+a loading state until its children have been created, via the [waitFor] attribute.
+This contains the number of expected child SuspensComponents.
+
+```angular2html
+<susp [state]="loadingState$ | async" [waitFor]="1">
+  <div *ngIf="movie$ | async as movie; else noMovie">
+    <susp [state]="loadingState$ | async"> 
+      ...
+    </susp>
+  </div>
+  <ng-template #noMovie>
+    <susp [state]="'success'"></susp>
+  </ng-template>
+</susp>
 ```
 
 ## Customizing the loading, error and empty states' look and feel
@@ -197,6 +217,10 @@ Provide ng-templates with suspLoading, suspEmpty and suspError directives
 </susp>
 ```
 
+## Cookbook
+
+Check the [cookbook](/docs/cookbook.md) for more examples.
+
 ## Roadmap
 
 - better documentation
@@ -207,10 +231,11 @@ Provide ng-templates with suspLoading, suspEmpty and suspError directives
 - ~~unit tests~~
 - ~~introduce timeouts~~
 - ~~intermediate loading state template~~
-- setup cookbook, better examples
+- ~~setup cookbook, better examples~~
 - catchError map
 - SuspenseDirective
 - ~~publish to npm~~
+- ...
 
 ## Lessons learned
 

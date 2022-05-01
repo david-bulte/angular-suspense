@@ -57,10 +57,10 @@ export class SuspenseComponent
 {
   @Input() debug?: string;
   @Input() state: LoadingState | null = null;
-  @Input() timeout!: number;
+  @Input() debounce!: number;
   @Input() catchError = false;
   @Input() stopPropagation = false;
-  @Input() expectedChildren: number | null = null;
+  @Input() waitFor: number | null = null;
 
   @ContentChildren(ErrorDirective, { read: TemplateRef, descendants: false })
   errorDirective!: QueryList<TemplateRef<ErrorDirective>>;
@@ -91,7 +91,7 @@ export class SuspenseComponent
     @Optional() @SkipSelf() private parent?: SuspenseComponent
   ) {
     parent?.registerChild(this);
-    this.timeout ??= this.suspenseService.timeout;
+    this.debounce ??= this.suspenseService.debounce;
   }
 
   get debugLoadingStatesInTemplate() {
@@ -142,12 +142,12 @@ export class SuspenseComponent
         : of(LoadingState.SUCCESS);
 
     const childrenLoadingState$: Observable<LoadingState> =
-      this.children$$.getValue()?.length === 0 && this.expectedChildren === null
+      this.children$$.getValue()?.length === 0 && this.waitFor === null
         ? of(LoadingState.SUCCESS)
         : this.children$$.pipe(
             filter((children) => {
-              return this.expectedChildren !== null
-                ? children.length >= this.expectedChildren
+              return this.waitFor !== null
+                ? children.length >= this.waitFor
                 : true;
             }),
             switchMap((children) =>
@@ -173,10 +173,10 @@ export class SuspenseComponent
 
     // todo investigate - for some reason tests fail when using debounce
     const combinedLoadingState$ =
-      this.timeout > 0
+      this.debounce > 0
         ? combineLatest(localLoadingState$, childrenLoadingState$).pipe(
             map((loadingStates) => this.extractLoadingState(loadingStates)),
-            debounce((status) => timer(this.getTimeout(status))),
+            debounce((status) => timer(this.getDebounceTime(status))),
             distinctUntilChanged()
           )
         : combineLatest(localLoadingState$, childrenLoadingState$).pipe(
@@ -335,8 +335,8 @@ export class SuspenseComponent
     }
   }
 
-  private getTimeout(status: LoadingState) {
-    return status === LoadingState.LOADING ? this.timeout : 0;
+  private getDebounceTime(status: LoadingState) {
+    return status === LoadingState.LOADING ? this.debounce : 0;
   }
 
   private setStateClass(loadingState: LoadingState) {
