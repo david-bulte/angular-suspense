@@ -3,10 +3,10 @@
 _Work in progress folks :eyes:, almost there :checkered_flag: and getting
 pretty excited :sunglasses:_
 
-Showing content as soon as it arrives can be a nice thing to pursue. However,
-when this results in a page full of spinners, skeleton loaders and what not, the
-user experience becomes less joyful. Somewhere there exists a balance between
-fast load times and jankless web pages, and with AngularSuspense, developers don't
+Showing content as soon as it arrives can be a nice thing to pursue. However, 
+when this results in a page full of spinners, skeleton loaders and what not, the 
+user experience becomes less joyful. Somewhere there exists a balance between 
+fast load times and jankless web pages, and with AngularSuspense, developers don't 
 have to compromise between the two.
 
 ![img-1](assets/img/suspense-intro.png)
@@ -18,29 +18,29 @@ This project was inspired by [react suspense](https://reactjs.org/docs/concurren
 
 ![img-2](assets/img/suspense.gif)
 
+
 ## How it works
 
 Components have their own loader component, i.e. SuspenseComponent.
-SuspenseComponent is aware of its component's LoadingState _and_ of the
+SuspenseComponent is aware of its component's LoadingState *and* of the 
 LoadingStates of all of the component's children.
 
 A LoadingState is either one of the following:
+- LOADING
+- EMPTY
+- ERROR
+- SUCCESS
 
-- `loading`
-- `empty`
-- `error`
-- `success`
-
-These are the rules AngularSuspense takes into account when displaying loaders,
+These are the rules AngularSuspense takes into account when displaying loaders, 
 empty or error state:
 
-- As long as the LoadingState of a component or the LoadingState of one of its children
-  is still `loading`, a loader will be shown.
-- When a component's LoadingState has become `success`, it will only be reevaluated when
-  its own LoadingState changes.
-- When a component's LoadingState is `empty`, the empty state will be shown.
-- When a component's LoadingState is `error`, or one of its child components' LoadingStates
-  is either `empty` or `error`, an error state is shown
+- As long as the LoadingState of a component or the LoadingState of one of its children 
+is still LOADING, a loader will be shown.
+- When a component's LoadingState has become SUCCESS, it will only be reevaluated when
+its own LoadingState changes.
+- When a component's LoadingState is EMPTY, the empty state will be shown.
+- When a component's LoadingState is ERROR, or one of its child components' LoadingStates
+is either EMPTY or ERROR, an error state is shown
 
 ## Getting started
 
@@ -70,7 +70,7 @@ Feature modules import SuspenseModule without forRoot():
     })
 ```
 
-In your components, areas that are loaded asynchronously are wrapped by
+In your components, areas that are loaded asynchronously are wrapped by 
 a SuspenseComponent (tag _susp_). Each SuspenseComponent is given a loading state via its
 [state] input attribute.
 
@@ -86,7 +86,6 @@ a SuspenseComponent (tag _susp_). Each SuspenseComponent is given a loading stat
 
 </susp>
 ```
-
 Note that this also works with a route hierarchy. If there exist a loading state in the
 child hierarchy, display will be supsended until all child components have been loaded.
 
@@ -104,7 +103,7 @@ child hierarchy, display will be supsended until all child components have been 
 ## StopPropagation
 
 Sometimes it does not matter whether a part of the page has been loaded or not. In
-that case we can mark that part as not being part of the parent's loading state via the
+that case we can mark that part as not being part of the parent's loading state via the 
 [stopPropagation] attribute:
 
 ```angular2html
@@ -145,13 +144,13 @@ you can set an error boundary with the catchError attribute:
 ## Debounce
 
 Sometimes you want to wait a couple of microseconds before showing the loading state. In that
-case one can set the global _debounce_ attribute of via SuspenseModule.forRoot().
+case one can set the global _debounce_ attribute of via SuspenseModule.forRoot(). 
 
 ```typescript
-SuspenseModule.forRoot({ debounce: 300 });
+    SuspenseModule.forRoot({ debounce: 300 })
 ```
 
-You can also set a timeout case by case by setting the SuspenseComponent's [debounce] input
+You can also set a timeout case by case by setting the SuspenseComponent's [debounce] input 
 property.
 
 ```angular2html
@@ -160,7 +159,7 @@ property.
 
 ## WaitFor
 
-When a SuspenseComponent is conditionally created, its parent component cannot know
+When a SuspenseComponent is conditionally created, its parent component cannot know 
 whether the page has been completely loaded or not. You can give it a hint to show
 a loading state until its children have been created, via the [waitFor] attribute.
 This contains the number of expected child SuspensComponents.
@@ -168,7 +167,7 @@ This contains the number of expected child SuspensComponents.
 ```angular2html
 <susp [state]="loadingState$ | async" [waitFor]="1">
   <div *ngIf="movie$ | async as movie; else noMovie">
-    <susp [state]="loadingState$ | async">
+    <susp [state]="loadingState$ | async"> 
       ...
     </susp>
   </div>
@@ -182,7 +181,7 @@ This contains the number of expected child SuspensComponents.
 
 ### Globally
 
-Provide the susp-default-templates component on your top page.
+Provide the susp-default-templates component on your top page. 
 
 ```angular2html
 @Component({
@@ -246,13 +245,13 @@ Just some quick notes on what I have learned while working on this project.
 
 When deploying angular applications to github pages, you have to apply
 [a little hack](https://angular.io/guide/deployment#deploy-to-github-pages)
-to make routing work: copy _the compiled index.html_ file and name it 404.html.
+to make routing work: copy *the compiled index.html* file and name it 404.html.
 Add the following to your github actions file to do just that:
 
 ```yaml
-- name: Copy index.html -> 404.html
-  uses: canastro/copy-file-action@master
-  with:
-    source: 'dist/apps/demo/index.html'
-    target: 'dist/apps/demo/404.html'
+      - name: Copy index.html -> 404.html
+        uses: canastro/copy-file-action@master
+        with:
+          source: "dist/apps/demo/index.html"
+          target: "dist/apps/demo/404.html"
 ```

@@ -44,8 +44,6 @@ import { TargetDirective } from '../target.directive';
 
 logger.enableOnly = true;
 
-export type LoadingState = 'loading' | 'error' | 'empty' | 'success';
-
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'susp',
@@ -83,7 +81,7 @@ export class SuspenseComponent
   private children$$ = new BehaviorSubject<SuspenseComponent[]>([]);
   private loadingRef?: EmbeddedViewRef<LoadingDirective>;
   private localLoadingState$$ = new BehaviorSubject(null);
-  public publicLoadingState$$ = new BehaviorSubject('loading');
+  public publicLoadingState$$ = new BehaviorSubject(LoadingState.LOADING);
 
   constructor(
     private vcr: ViewContainerRef,
@@ -102,7 +100,9 @@ export class SuspenseComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['state']) {
-      this.localLoadingState$$.next(changes['state'].currentValue || 'loading');
+      this.localLoadingState$$.next(
+        changes['state'].currentValue || LoadingState.LOADING
+      );
     }
   }
 
@@ -139,11 +139,11 @@ export class SuspenseComponent
             filter((loadingState) => loadingState !== null),
             map((loadingState) => loadingState as unknown as LoadingState)
           )
-        : of('success');
+        : of(LoadingState.SUCCESS);
 
     const childrenLoadingState$: Observable<LoadingState> =
       this.children$$.getValue()?.length === 0 && this.waitFor === null
-        ? of('success')
+        ? of(LoadingState.SUCCESS)
         : this.children$$.pipe(
             filter((children) => {
               return this.waitFor !== null
@@ -155,7 +155,7 @@ export class SuspenseComponent
                 ...children.map((child) => {
                   return child.publicLoadingState$$.pipe(
                     takeWhile(
-                      (loadingState) => loadingState === 'loading',
+                      (loadingState) => loadingState === LoadingState.LOADING,
                       true
                     )
                   );
@@ -163,11 +163,11 @@ export class SuspenseComponent
               )
             ),
             map((childLoadingstates) => {
-              return childLoadingstates.indexOf('error') > -1
-                ? 'error'
-                : 'success';
+              return childLoadingstates.indexOf(LoadingState.ERROR) > -1
+                ? LoadingState.ERROR
+                : LoadingState.SUCCESS;
             }),
-            startWith('loading' as const),
+            startWith(LoadingState.LOADING),
             distinctUntilChanged()
           );
 
@@ -194,7 +194,7 @@ export class SuspenseComponent
       this.container.vcr.clear();
 
       switch (loadingState) {
-        case 'empty':
+        case LoadingState.EMPTY:
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getEmptyDirective(),
             { $implicit: undefined }
@@ -205,12 +205,19 @@ export class SuspenseComponent
               this.renderer.addClass(rootNode, '__suspense__');
             }
           });
-          logger.log('item', this.debug, 'publicLoadingState$$.next', 'error');
+          logger.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.ERROR
+          );
           this.publicLoadingState$$.next(
-            this.catchError || this.stopPropagation ? 'success' : 'error'
+            this.catchError || this.stopPropagation
+              ? LoadingState.SUCCESS
+              : LoadingState.ERROR
           );
           break;
-        case 'error':
+        case LoadingState.ERROR:
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getErrorDirective(),
             { $implicit: undefined }
@@ -220,17 +227,24 @@ export class SuspenseComponent
               this.renderer.addClass(rootNode, '__suspense__');
             }
           });
-          logger.log('item', this.debug, 'publicLoadingState$$.next', 'error');
+          logger.log(
+            'item',
+            this.debug,
+            'publicLoadingState$$.next',
+            LoadingState.ERROR
+          );
           this.publicLoadingState$$.next(
-            this.catchError || this.stopPropagation ? 'success' : 'error'
+            this.catchError || this.stopPropagation
+              ? LoadingState.SUCCESS
+              : LoadingState.ERROR
           );
           break;
-        case 'loading':
+        case LoadingState.LOADING:
           logger.only(
             'item',
             this.debug,
             'publicLoadingState$$.next',
-            'loading'
+            LoadingState.LOADING
           );
           this.loadingRef = this.container.vcr.createEmbeddedView(
             this.getLoadingDirective(),
@@ -246,10 +260,10 @@ export class SuspenseComponent
             '__suspense--loading__'
           );
           if (this.stopPropagation) {
-            this.publicLoadingState$$.next('success');
+            this.publicLoadingState$$.next(LoadingState.SUCCESS);
           }
           break;
-        case 'success':
+        case LoadingState.SUCCESS:
           this.renderer.removeClass(
             this.elRef.nativeElement,
             '__suspense--hide-all__'
@@ -258,9 +272,9 @@ export class SuspenseComponent
             'item',
             this.debug,
             'publicLoadingState$$.next',
-            'success'
+            LoadingState.SUCCESS
           );
-          this.publicLoadingState$$.next('success');
+          this.publicLoadingState$$.next(LoadingState.SUCCESS);
           break;
         default:
         // all hidden
@@ -301,25 +315,28 @@ export class SuspenseComponent
       childrenLoadingState
     );
 
-    if (localLoadingState === 'success' && childrenLoadingState === 'success') {
-      return 'success';
-    } else if (
-      localLoadingState === 'error' ||
-      childrenLoadingState === 'error'
+    if (
+      localLoadingState === LoadingState.SUCCESS &&
+      childrenLoadingState === LoadingState.SUCCESS
     ) {
-      return 'error';
+      return LoadingState.SUCCESS;
     } else if (
-      localLoadingState === 'empty' &&
-      childrenLoadingState !== 'loading'
+      localLoadingState === LoadingState.ERROR ||
+      childrenLoadingState === LoadingState.ERROR
     ) {
-      return 'empty';
+      return LoadingState.ERROR;
+    } else if (
+      localLoadingState === LoadingState.EMPTY &&
+      childrenLoadingState !== LoadingState.LOADING
+    ) {
+      return LoadingState.EMPTY;
     } else {
-      return 'loading';
+      return LoadingState.LOADING;
     }
   }
 
   private getDebounceTime(status: LoadingState) {
-    return status === 'loading' ? this.debounce : 0;
+    return status === LoadingState.LOADING ? this.debounce : 0;
   }
 
   private setStateClass(loadingState: LoadingState) {
@@ -338,4 +355,11 @@ export class SuspenseComponent
       `__suspense--${loadingState}__`.toLowerCase()
     );
   }
+}
+
+export enum LoadingState {
+  LOADING = 'LOADING',
+  SUCCESS = 'SUCCESS',
+  EMPTY = 'EMPTY',
+  ERROR = 'ERROR',
 }

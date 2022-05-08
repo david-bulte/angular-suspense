@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { SuspenseModule } from '../..';
 
-import { SuspenseComponent } from './suspense.component';
+import { LoadingState, SuspenseComponent } from './suspense.component';
 
 class TestService {
-  masterLoadingState$ = new BehaviorSubject('loading');
-  detailLoadingState$ = new BehaviorSubject('loading');
+  masterLoadingState$ = new BehaviorSubject(LoadingState.LOADING);
+  detailLoadingState$ = new BehaviorSubject(LoadingState.LOADING);
 }
 
 @Component({
@@ -73,55 +73,55 @@ describe('SuspenseComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  test('if both child and parent is "loading", the combined state is "loading" and the parent "loading" template should be visible', () => {
+  test('if both child and parent is LOADING, the combined state is LOADING and the parent LOADING template should be visible', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
   });
 
-  test('if child is "loaded" and parent is still "loading", the combined state is "loading" and the parent "loading" template should be visible', () => {
+  test('if child is LOADED and parent is still LOADING, the combined state is LOADING and the parent LOADING template should be visible', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next('success');
+    service.detailLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
   });
 
-  test('if child is still "loading" and parent is "loaded", the combined state is "loading" and the parent "loading" template should be visible', () => {
+  test('if child is still LOADING and parent is LOADED, the combined state is LOADING and the parent LOADING template should be visible', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next('success');
+    service.masterLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
   });
 
-  test('if child is "loaded" and parent is also "loaded", the combined state is "loaded" and the "loading" template should not be visible', () => {
+  test('if child is LOADED and parent is also LOADED, the combined state is LOADED and the LOADING template should not be visible', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next('success');
+    service.detailLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next('success');
+    service.masterLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
   });
 
-  test('if both child and parent have been "loaded", and the child starts LOADING again, the combined state is still "loaded", and only "loading" template of the child is visible', () => {
+  test('if both child and parent have been LOADED, and the child starts LOADING again, the combined state is still LOADED, and only LOADING template of the child is visible', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next('success');
+    service.detailLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next('success');
+    service.masterLoadingState$.next(LoadingState.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next('loading');
+    service.detailLoadingState$.next(LoadingState.LOADING);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
     expect(parentEl.textContent).toContain(LOADING_DETAIL_MESSAGE);
