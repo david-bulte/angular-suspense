@@ -5,7 +5,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LoadingState } from '@david-bulte/angular-suspense';
+import { LoadingState, LoadingStates } from '@david-bulte/angular-suspense';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -30,7 +30,7 @@ export class MovieDetailComponent implements OnInit {
   loadingStateMovie$ = this.movieRepo.loadingStateMovie$;
   actor$$ = new BehaviorSubject<Actor | null>(null);
   loadingStateActor$$ = new BehaviorSubject<LoadingState | null>(
-    LoadingState.LOADING
+    LoadingStates.LOADING
   );
   @ViewChild('feedbackComponent') feedbackComponent?: FeedbackComponent;
 
@@ -54,7 +54,7 @@ export class MovieDetailComponent implements OnInit {
     });
 
     this.actors$.pipe(take(1)).subscribe(() => {
-      this.loadingStateActor$$.next(LoadingState.SUCCESS);
+      this.loadingStateActor$$.next(LoadingStates.SUCCESS);
     });
   }
 
@@ -62,16 +62,16 @@ export class MovieDetailComponent implements OnInit {
     this.actor$$.next(null);
     this.feedbackComponent?.reset();
     this.loadingStateActor$$.next(null);
-    this.loadingStateActor$$.next(LoadingState.LOADING);
+    this.loadingStateActor$$.next(LoadingStates.LOADING);
     this.movieService.loadActor(id).subscribe(
       (actor) => {
         this.loadingStateActor$$.next(
-          actor?.summary ? LoadingState.SUCCESS : LoadingState.EMPTY
+          actor?.summary ? LoadingStates.SUCCESS : LoadingStates.EMPTY
         );
         this.actor$$.next(actor);
       },
       () => {
-        this.loadingStateActor$$.next(LoadingState.ERROR);
+        this.loadingStateActor$$.next(LoadingStates.ERROR);
       }
     );
   }

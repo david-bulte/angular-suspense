@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoadingState } from '@david-bulte/angular-suspense';
+import { LoadingStates } from '@david-bulte/angular-suspense';
 import { createState, filterNil, select, Store, withProps } from '@ngneat/elf';
 import {
   getEntity,
@@ -58,13 +58,13 @@ export class MovieRepository {
   loadingStateMovie$ = store.pipe(
     select(({ detailsLoading, detailsError }) => {
       if (detailsError) {
-        return LoadingState.ERROR;
+        return LoadingStates.ERROR;
       }
       return detailsLoading === false
-        ? LoadingState.SUCCESS
-        : LoadingState.LOADING;
+        ? LoadingStates.SUCCESS
+        : LoadingStates.LOADING;
     }),
-    startWith(LoadingState.LOADING)
+    startWith(LoadingStates.LOADING)
   );
 
   loadingState$ = combineLatest([
@@ -73,14 +73,14 @@ export class MovieRepository {
   ]).pipe(
     map(([status, count]: [StatusState, number]) => {
       return status.value === 'pending'
-        ? LoadingState.LOADING
+        ? LoadingStates.LOADING
         : status.value === 'error'
-        ? LoadingState.ERROR
+        ? LoadingStates.ERROR
         : count > 0
-        ? LoadingState.SUCCESS
-        : LoadingState.EMPTY;
+        ? LoadingStates.SUCCESS
+        : LoadingStates.EMPTY;
     }),
-    startWith(LoadingState.LOADING)
+    startWith(LoadingStates.LOADING)
   );
 
   setActive(name: string | null) {

@@ -3,11 +3,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
 import { SuspenseModule } from '../..';
 
-import { LoadingState, SuspenseComponent } from './suspense.component';
+import { LoadingStates, SuspenseComponent } from './suspense.component';
 
 class TestService {
-  masterLoadingState$ = new BehaviorSubject(LoadingState.LOADING);
-  detailLoadingState$ = new BehaviorSubject(LoadingState.LOADING);
+  masterLoadingState$ = new BehaviorSubject(LoadingStates.LOADING);
+  detailLoadingState$ = new BehaviorSubject(LoadingStates.LOADING);
 }
 
 @Component({
@@ -82,7 +82,7 @@ describe('SuspenseComponent', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next(LoadingState.SUCCESS);
+    service.detailLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
   });
@@ -91,7 +91,7 @@ describe('SuspenseComponent', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next(LoadingState.SUCCESS);
+    service.masterLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
   });
@@ -100,11 +100,11 @@ describe('SuspenseComponent', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next(LoadingState.SUCCESS);
+    service.detailLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next(LoadingState.SUCCESS);
+    service.masterLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
   });
@@ -113,15 +113,15 @@ describe('SuspenseComponent', () => {
     const parentEl: HTMLElement = fixture.nativeElement;
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next(LoadingState.SUCCESS);
+    service.detailLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).toContain(LOADING_MASTER_MESSAGE);
 
-    service.masterLoadingState$.next(LoadingState.SUCCESS);
+    service.masterLoadingState$.next(LoadingStates.SUCCESS);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
 
-    service.detailLoadingState$.next(LoadingState.LOADING);
+    service.detailLoadingState$.next(LoadingStates.LOADING);
     fixture.detectChanges();
     expect(parentEl.textContent).not.toContain(LOADING_MASTER_MESSAGE);
     expect(parentEl.textContent).toContain(LOADING_DETAIL_MESSAGE);

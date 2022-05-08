@@ -25,8 +25,20 @@ import { Component } from '@angular/core';
           <div>Loading ...</div>
         </div>
       </ng-template>
-      <ng-template suspEmpty> This is my global empty state</ng-template>
-      <ng-template suspError> This is my global error state</ng-template>
+      <ng-template suspEmpty>
+        <div
+          class="flex justify-center items-center space-x-1 text-sm text-gray-700 h-full w-full"
+        >
+          This is my global empty state
+        </div>
+      </ng-template>
+      <ng-template suspError>
+        <div
+          class="flex justify-center items-center space-x-1 text-sm text-gray-700 h-full w-full"
+        >
+          This is my global error state
+        </div>
+      </ng-template>
     </susp-default-templates>
   `,
 })

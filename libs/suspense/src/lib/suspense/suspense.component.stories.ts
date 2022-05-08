@@ -1,6 +1,6 @@
 import { Meta, moduleMetadata, Story } from '@storybook/angular';
 import { SuspenseModule } from '../suspense.module';
-import { LoadingState, SuspenseComponent } from './suspense.component';
+import { LoadingStates, SuspenseComponent } from './suspense.component';
 
 export default {
   title: 'SuspenseComponent',
@@ -15,10 +15,10 @@ export default {
   argTypes: {
     state: {
       options: [
-        LoadingState.LOADING,
-        LoadingState.SUCCESS,
-        LoadingState.ERROR,
-        LoadingState.EMPTY,
+        LoadingStates.LOADING,
+        LoadingStates.SUCCESS,
+        LoadingStates.ERROR,
+        LoadingStates.EMPTY,
       ],
       control: { type: 'radio' },
     },
@@ -37,7 +37,7 @@ const DefaultStory: Story = (args) => ({
 export const Default = DefaultStory.bind({});
 Default.args = {
   debug: 'debugName',
-  state: LoadingState.LOADING,
+  state: LoadingStates.LOADING,
   debounce: 0,
   catchError: false,
   stopPropagation: false,

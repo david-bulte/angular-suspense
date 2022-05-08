@@ -1,6 +1,7 @@
 export * from './lib/suspense.module';
 export {
   SuspenseComponent,
+  LoadingStates,
   LoadingState,
 } from './lib/suspense/suspense.component';
 export { EmptyDirective } from './lib/empty.directive';
