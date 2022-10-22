@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/demo/feature-stats",
+  "sourceRoot": "libs/demo/feature-stats/src",
+  "prefix": "angular-suspense",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/demo/feature-stats"],
+      "options": {
+        "jestConfig": "libs/demo/feature-stats/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/demo/feature-stats/**/*.ts",
+          "libs/demo/feature-stats/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
