@@ -8,6 +8,8 @@ import { SuccessDirective } from './success.directive';
 import { SuspenseService } from './suspense.service';
 import { SuspenseComponent } from './suspense/suspense.component';
 import { TargetDirective } from './target.directive';
+import { SuspenseDirective } from './suspense.directive';
+import { SuspensePipe } from './suspense.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -19,6 +21,8 @@ import { TargetDirective } from './target.directive';
     SuccessDirective,
     TargetDirective,
     DefaultTemplatesComponent,
+    SuspenseDirective,
+    SuspensePipe,
   ],
   exports: [
     SuspenseComponent,
@@ -27,6 +31,8 @@ import { TargetDirective } from './target.directive';
     LoadingDirective,
     SuccessDirective,
     DefaultTemplatesComponent,
+    SuspenseDirective,
+    SuspensePipe,
   ],
 })
 export class SuspenseModule {

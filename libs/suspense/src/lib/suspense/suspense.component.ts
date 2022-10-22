@@ -39,6 +39,7 @@ import { EmptyDirective } from '../empty.directive';
 import { ErrorDirective } from '../error.directive';
 import { LoadingDirective } from '../loading.directive';
 import { logger } from '../log-utils';
+import { Suspensable } from '../suspensable';
 import { SuspenseService } from '../suspense.service';
 import { TargetDirective } from '../target.directive';
 
@@ -53,7 +54,7 @@ logger.enableOnly = true;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SuspenseComponent
-  implements OnChanges, AfterContentInit, OnDestroy
+  implements OnChanges, AfterContentInit, OnDestroy, Suspensable
 {
   @Input() debug?: string;
   @Input() state: LoadingState | null = null;
@@ -78,7 +79,7 @@ export class SuspenseComponent
   @ViewChild(ErrorDirective, { read: TemplateRef, static: true })
   defaultErrorDirective!: TemplateRef<ErrorDirective>;
 
-  private children$$ = new BehaviorSubject<SuspenseComponent[]>([]);
+  private children$$ = new BehaviorSubject<Suspensable[]>([]);
   private loadingRef?: EmbeddedViewRef<LoadingDirective>;
   private localLoadingState$$ = new BehaviorSubject(null);
   public publicLoadingState$$ = new BehaviorSubject(LoadingStates.LOADING);
@@ -114,7 +115,7 @@ export class SuspenseComponent
     this.parent?.removeChild(this);
   }
 
-  private registerChild(child: SuspenseComponent) {
+  public registerChild(child: Suspensable) {
     logger.log('item', this.debug, 'registerChild', child.debug);
     this.children$$.next([...this.children$$.getValue(), child]);
   }
@@ -354,6 +355,18 @@ export class SuspenseComponent
       this.elRef.nativeElement,
       `__suspense--${loadingState}__`.toLowerCase()
     );
+  }
+
+  wait() {
+    const waiting$$ = new BehaviorSubject(LoadingStates.LOADING);
+    this.registerChild({
+      publicLoadingState$$: waiting$$,
+    });
+    return () => {
+      setTimeout(() => {
+        waiting$$.next(LoadingStates.SUCCESS);
+      });
+    };
   }
 }
 

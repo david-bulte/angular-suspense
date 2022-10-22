@@ -3,10 +3,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SuspenseModule } from '@david-bulte/angular-suspense';
 import { AvatarComponent } from './avatar/avatar.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 import { MovieCardComponent } from './movie-card/movie-card.component';
 import { MovieDetailComponent } from './movie-detail/movie-detail.component';
 import { MoviesComponent } from './movies/movies.component';
-import { FeedbackComponent } from './feedback/feedback.component';
 
 @NgModule({
   imports: [CommonModule, RouterModule, SuspenseModule],

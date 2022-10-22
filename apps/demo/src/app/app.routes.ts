@@ -12,6 +12,15 @@ export const routes: Routes = [
       {
         path: ':name',
         component: MovieDetailComponent,
+        children: [
+          {
+            path: 'stats',
+            loadChildren: () =>
+              import('@angular-suspense/demo/feature-stats').then(
+                (m) => m.DemoFeatureStatsModule
+              ),
+          },
+        ],
       },
       {
         path: '',

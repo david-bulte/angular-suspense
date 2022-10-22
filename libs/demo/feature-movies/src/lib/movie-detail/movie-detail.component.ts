@@ -4,7 +4,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoadingState, LoadingStates } from '@david-bulte/angular-suspense';
 import {
   BehaviorSubject,
@@ -13,6 +13,7 @@ import {
   Observable,
   take,
 } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { Actor } from '../movie.model';
 import { MovieRepository } from '../movie.repository';
@@ -39,7 +40,8 @@ export class MovieDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private movieRepo: MovieRepository,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +55,7 @@ export class MovieDetailComponent implements OnInit {
       this.actor$$.next(null);
     });
 
-    this.actors$.pipe(take(1)).subscribe(() => {
+    this.actors$.pipe(take(1), delay(5000)).subscribe(() => {
       this.loadingStateActor$$.next(LoadingStates.SUCCESS);
     });
   }
@@ -74,5 +76,9 @@ export class MovieDetailComponent implements OnInit {
         this.loadingStateActor$$.next(LoadingStates.ERROR);
       }
     );
+  }
+
+  loadStats() {
+    this.router.navigate(['stats'], { relativeTo: this.route });
   }
 }

@@ -4,6 +4,7 @@
     "demo": "apps/demo",
     "demo-e2e": "apps/demo-e2e",
     "demo-feature-movies": "libs/demo/feature-movies",
+    "demo-feature-stats": "libs/demo/feature-stats",
     "suspense": "libs/suspense"
   }
 }

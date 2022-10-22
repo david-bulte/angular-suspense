@@ -18,6 +18,9 @@
       "@angular-suspense/demo-feature-movies": [
         "libs/demo/feature-movies/src/index.ts"
       ],
+      "@angular-suspense/demo/feature-stats": [
+        "libs/demo/feature-stats/src/index.ts"
+      ],
       "@david-bulte/angular-suspense": ["libs/suspense/src/index.ts"]
     }
   },

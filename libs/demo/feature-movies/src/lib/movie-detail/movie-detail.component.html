@@ -4,8 +4,9 @@
   [catchError]="true"
   *ngIf="name$ | async; else pleaseSelect"
 >
+<!--  [waitFor]="1"-->
   <app-movie-card
-    *ngIf="movie$ | async as movie"
+    *ngIf="movie$ | async | suspense as movie"
     [movie]="movie"
     (selectActor)="onSelectActor($event)"
   >
@@ -34,6 +35,13 @@
         <app-feedback #feedbackComponent [expected]="1"></app-feedback>
       </ng-template>
     </susp>
+
+    <div style="margin-top: 3rem">
+      <button type="button" (click)="loadStats()">load stats</button>
+<!--      <router-outlet susp></router-outlet>-->
+      <router-outlet></router-outlet>
+    </div>
+
   </app-movie-card>
 </susp>
 
