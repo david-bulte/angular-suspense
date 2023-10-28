@@ -38,8 +38,8 @@
 
     <div style="margin-top: 3rem">
       <button type="button" (click)="loadStats()">load stats</button>
-<!--      <router-outlet susp></router-outlet>-->
-      <router-outlet></router-outlet>
+      <router-outlet susp [debug]="'router-outlet'"></router-outlet>
+<!--      <router-outlet></router-outlet>-->
     </div>
 
   </app-movie-card>
